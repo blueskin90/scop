@@ -22,7 +22,7 @@ INCLUDES = -I includes/ -I ./libs/mlx/ -I ./libs/libft/includes/ -I ./libs/libft
 
 FLAGS = -Wall -Wextra -Werror -Ofast
 
-MLXFLAGS = -framework OpenGL -framework AppKit
+MLXFLAGS = -framework OpenGL -lglfw
 
 OBJS = $(addprefix objs/, $(addsuffix .o, \
 		$(addprefix core/, \

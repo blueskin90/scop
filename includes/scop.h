@@ -13,6 +13,7 @@
 #ifndef SCOP_H
 # define SCOP_H
 
+# define GL_SILENCE_DEPRECATION
 #include "libft.h"
 #include "libftg.h"
 #include "libftprintf.h"
