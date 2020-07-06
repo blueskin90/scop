@@ -105,5 +105,5 @@ void				ft_lstiter(t_list *lst, void (*f)(t_list *elem));
 t_list				*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem));
 unsigned long		ft_atoi_base_ll(const char *val, unsigned int from);
 int					ft_strisvalidint(const char *str);
-void				ft_error(char *str);
+//void				ft_error(char *str);
 #endif
