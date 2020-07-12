@@ -6,7 +6,7 @@
 #    By: toliver <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/11/12 01:24:53 by toliver           #+#    #+#              #
-#    Updated: 2019/01/31 22:09:09 by toliver          ###   ########.fr        #
+#    Updated: 2020/07/12 19:52:17 by toliver          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -81,7 +81,6 @@ FILES = atoi \
 	   strisvalidint \
 	   atoi_base_ll \
 	   atoi_base \
-	   error \
 
 INCLUDES = -I./includes
 

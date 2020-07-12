@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/18 11:35:10 by toliver           #+#    #+#             */
-/*   Updated: 2020/06/18 11:36:05 by toliver          ###   ########.fr       */
+/*   Updated: 2020/07/13 01:19:38 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,22 @@
 # define SCOP_H
 
 # define GL_SILENCE_DEPRECATION
+
 #include "libft.h"
-#include "libftg.h"
 #include "libftprintf.h"
 #include  <fcntl.h>
+#include <GLFW/glfw3.h> // GLFW helper library
+#include <sys/errno.h>
 
 #define FLAGS ""
+
+
+typedef struct	s_vec3int
+{
+	int			x;
+	int			y;
+	int			z;
+}				t_vec3int;
 
 typedef struct	s_vec4
 {
@@ -29,54 +39,17 @@ typedef struct	s_vec4
 	float		w;
 }				t_vec4;
 
-typedef struct		s_face
+typedef struct				s_vec3intlist
 {
-	size_t			indice_nbr;
-	t_vec4			*indices;// 1 vec par indice
-}					t_face;
+	t_vec3int				vec;
+	struct s_vec3intlist	*next;
+}							t_vec3intlist;
 
-typedef struct		s_group
+typedef struct			s_vec4list
 {
-	char			*name;
-	size_t			faces_nbr;
-	t_face			*faces;
-}					t_group;
-
-typedef struct		s_veclist
-{
-	t_vec4			vec;
-	struct	s_list	*next;
-}					t_veclist;
-
-typedef struct	s_grp
-{
-	int			type;
-	void		*ptr;
-}				t_grp;
-
-
-
-typedef struct	s_obj
-{
-	char		*name;
-	size_t		v_nbr;
-	t_vec4		*v;
-	size_t		vt_nbr;
-	t_vec4		*vt;
-	size_t		vn_nbr;
-	t_vec4		*vn;
-	size_t		faces_nbr;
-	t_face		*faces;
-}				t_obj;
-
-const char* const g_error_value[] =
-{
-	"malloc failed",
-	"no valid .obj file given",
-	"invalid file was given:  ",
-	"couldn't open file: ",
-	0
-}; 
+	t_vec4				vec;
+	struct	s_vec4list	*next;
+}						t_vec4list;
 
 enum	e_errors
 {
@@ -84,10 +57,45 @@ enum	e_errors
 	NO_VALID_OBJ,
 	INVALID_FILE,
 	OPEN,
+	TOO_MANY_OBJECTS,
+	PARSING_ERROR,
+	MAXVALUE,
 };
+
+typedef struct	s_obj
+{
+	char		*name;
+	size_t		vertices_nbr;
+	t_vec4		*vertices;
+	size_t		faces_nbr;
+	t_vec3int	*faces;
+}				t_obj;
 
 typedef struct	s_env
 {
 	char		*name;
+	t_obj		obj;
 }				t_env;
+
+enum	e_parse_mode
+{
+	INIT,
+	VERT,
+	FACE,
+	ERR,
+};
+
+/*
+** GLOBAL
+*/
+
+extern const char * const g_error_value[MAXVALUE + 1];
+
+
+
+int		obj_parse(t_env *env, char *file);
+int		ft_error(int error, char *str);
+t_env	*ft_getenv(void);
+int		ft_error(int error, char *str);
+
 #endif
