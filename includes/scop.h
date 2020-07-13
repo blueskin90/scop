@@ -21,15 +21,9 @@
 #include <GLFW/glfw3.h> // GLFW helper library
 #include <sys/errno.h>
 
+#define INT_MAX 2147483647
+#define INT_MIN -2147483648
 #define FLAGS ""
-
-
-typedef struct	s_vec3int
-{
-	int			x;
-	int			y;
-	int			z;
-}				t_vec3int;
 
 typedef struct	s_vec4
 {
@@ -39,18 +33,6 @@ typedef struct	s_vec4
 	float		w;
 }				t_vec4;
 
-typedef struct				s_vec3intlist
-{
-	t_vec3int				vec;
-	struct s_vec3intlist	*next;
-}							t_vec3intlist;
-
-typedef struct			s_vec4list
-{
-	t_vec4				vec;
-	struct	s_vec4list	*next;
-}						t_vec4list;
-
 enum	e_errors
 {
 	MALLOC,
@@ -59,16 +41,29 @@ enum	e_errors
 	OPEN,
 	TOO_MANY_OBJECTS,
 	PARSING_ERROR,
+	UNEXPECTED_TOKEN,
+	OVERFLOW,
+	NOT_ENOUGH_INDICES,
+	WRONG_FACE_VALUE,
+	NO_FACES,
 	MAXVALUE,
 };
+
+typedef struct	s_face
+{
+	size_t		size;
+	int			*arr;
+}				t_face;
 
 typedef struct	s_obj
 {
 	char		*name;
 	size_t		vertices_nbr;
+	size_t		vertices_arr_size;
 	t_vec4		*vertices;
 	size_t		faces_nbr;
-	t_vec3int	*faces;
+	size_t		faces_arr_size;
+	t_face		*faces;
 }				t_obj;
 
 typedef struct	s_env
@@ -83,6 +78,7 @@ enum	e_parse_mode
 	VERT,
 	FACE,
 	ERR,
+	END,
 };
 
 /*
@@ -94,6 +90,7 @@ extern const char * const g_error_value[MAXVALUE + 1];
 
 
 int		obj_parse(t_env *env, char *file);
+int		ft_parsing_error(char *line, int *mode);
 int		ft_error(int error, char *str);
 t_env	*ft_getenv(void);
 int		ft_error(int error, char *str);

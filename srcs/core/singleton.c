@@ -19,7 +19,9 @@ t_env		*ft_getenv(void)
 		{
 			NULL,
 			0,
+			0,
 			NULL,
+			0,
 			0,
 			NULL,
 		}
