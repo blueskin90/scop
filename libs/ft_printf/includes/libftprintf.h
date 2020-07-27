@@ -78,6 +78,9 @@ typedef struct				s_penv
 	const char				*strcopy;
 	char					buff[BUFFSIZE];
 	int						printflen;
+	char					*printfstr;
+	int						is_whatprintf;
+	int						fd;
 	int						buffilasttoken;
 	int						buffi;
 	int						lastparam;
@@ -152,6 +155,8 @@ typedef struct				s_bigint
 ** add __attribute__((format(printf,1,2))); to have compilation error like real
 */
 int							ft_printf(const char *str, ...);
+char						*ft_sprintf(const char *str, ...);
+int							ft_dprintf(int fd, const char *str, ...);
 /*
 ** BUFFER FILLING FUNCTIONS
 */

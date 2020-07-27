@@ -31,6 +31,39 @@ void							env_pinit(t_penv *env, const char *str)
 	env->null[6] = '\0';
 }
 
+int								ft_dprintf(int fd, const char *str, ...)
+{
+	t_penv						env;
+
+	if (str == NULL)
+		return (-1);
+	env_pinit(&env, str);
+	env.is_whatprintf = 2;
+	env.fd = fd;
+	va_start(env.arg, str);
+	if (parse_string(&env) == -1)
+		buff_flush(&env);
+	else
+		buff_flush(&env);
+	return (env.printflen);
+}
+
+char							*ft_sprintf(const char *str, ...)
+{
+	t_penv						env;
+
+	if (str == NULL)
+		return (NULL);
+	env_pinit(&env, str);
+	env.is_whatprintf = 1;
+	va_start(env.arg, str);
+	if (parse_string(&env) == -1)
+		buff_flush(&env);
+	else
+		buff_flush(&env);
+	return (env.printfstr);
+}
+
 int								ft_printf(const char *str, ...)
 {
 	t_penv						env;
@@ -41,6 +74,7 @@ int								ft_printf(const char *str, ...)
 		return (-1);
 	}
 	env_pinit(&env, str);
+	env.is_whatprintf = 0;
 	va_start(env.arg, str);
 	if (parse_string(&env) == -1)
 	{

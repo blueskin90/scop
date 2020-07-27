@@ -23,10 +23,31 @@ void			buff_check(t_penv *env)
 	}
 }
 
+void			buff_malloc(t_penv *env, int len)
+{
+	int			i;
+
+	env->printfstr = (char*)malloc(sizeof(char) * (len + 1));
+	if (env->printfstr == NULL)
+		return ;
+	i = 0;
+	while (i < len)
+	{
+		env->printfstr[i] = env->buff[i];
+		i++;
+	}
+	env->printfstr[i] = '\0';
+}
+
 void			buff_flush(t_penv *env)
 {
 	env->printflen += env->buffilasttoken;
-	write(1, env->buff, env->buffilasttoken);
+	if (env->is_whatprintf == 0)
+		write(1, env->buff, env->buffilasttoken);
+	else if (env->is_whatprintf == 1)
+		buff_malloc(env, env->printflen);
+	else if (env->is_whatprintf == 2)
+		write(env->fd, env->buff, env->buffilasttoken);
 	env->buffi = 0;
 	env->buffilasttoken = 0;
 }

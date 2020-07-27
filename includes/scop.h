@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/18 11:35:10 by toliver           #+#    #+#             */
-/*   Updated: 2020/07/13 01:19:38 by toliver          ###   ########.fr       */
+/*   Updated: 2020/07/28 00:34:07 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,23 @@
 # define SCOP_H
 
 # define GL_SILENCE_DEPRECATION
+#define __gl_h_
+# define GL_DO_NOT_WARN_IF_MULTI_GL_VERSION_HEADERS_INCLUDED
 
 #include "libft.h"
 #include "libftprintf.h"
 #include  <fcntl.h>
+#include <OpenGL/gl3.h>
 #include <GLFW/glfw3.h> // GLFW helper library
 #include <sys/errno.h>
 
 #define FLAGS ""
 
+#define SCR_WIDTH 800
+#define SCR_HEIGHT 600
+
+#define MAJOR_V 4
+#define MINOR_V 0
 
 typedef struct	s_vec3int
 {
@@ -75,6 +83,7 @@ typedef struct	s_env
 {
 	char		*name;
 	t_obj		obj;
+	GLFWwindow	*win;
 }				t_env;
 
 enum	e_parse_mode
