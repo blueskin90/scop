@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/18 11:36:21 by toliver           #+#    #+#             */
-/*   Updated: 2020/07/28 20:16:40 by toliver          ###   ########.fr       */
+/*   Updated: 2020/07/28 22:16:52 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -380,7 +380,7 @@ void	ft_test(t_env *env)
         glUseProgram(env->shader_program);
         glBindVertexArray(env->vao); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
         //glDrawArrays(GL_TRIANGLES, 0, 6);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, env->obj.triangles_nbr * 3, GL_UNSIGNED_INT, 0);
         // glBindVertexArray(0); // no need to unbind it every time 
  
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -394,10 +394,6 @@ void	ft_test(t_env *env)
     glDeleteVertexArrays(1, &env->vao);
     glDeleteBuffers(1, &env->vbo);
     glDeleteBuffers(1, &env->ebo);
-
-    // glfw: terminate, clearing all previously allocated GLFW resources.
-    // ------------------------------------------------------------------
-    glfwTerminate();
 }
 
 void	ft_loop(t_env *env)
