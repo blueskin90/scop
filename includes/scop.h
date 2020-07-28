@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/18 11:35:10 by toliver           #+#    #+#             */
-/*   Updated: 2020/07/28 03:14:57 by toliver          ###   ########.fr       */
+/*   Updated: 2020/07/28 03:55:53 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ typedef struct		s_env
 	GLFWwindow		*win;
 	GLuint			vbo;	
 	GLuint			vao;	
+	GLuint			ebo;	
 	GLuint			vertex_shader;
 	GLuint			fragment_shader;
 	GLuint			shader_program;
