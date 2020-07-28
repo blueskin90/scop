@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/18 11:36:21 by toliver           #+#    #+#             */
-/*   Updated: 2020/07/28 03:55:52 by toliver          ###   ########.fr       */
+/*   Updated: 2020/07/28 20:16:40 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,10 +141,10 @@ int		ft_init_vertex_shader(t_env *env)
 	int  		success;
 	char		buf[513];
 	const char	*vertexShaderSource = "#version 330 core\n"
-    "layout (location = 0) in vec4 aPos;\n"
+    "layout (location = 0) in vec3 aPos;\n"
     "void main()\n"
     "{\n"
-    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, aPos.w);\n"
+    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1);\n"
     "}\0";
 
 	env->vertex_shader = glCreateShader(GL_VERTEX_SHADER);	
@@ -248,7 +248,7 @@ int		ft_init(t_env *env)
 
 	return (1);
 }
-
+/*
 void	ft_test(t_env *env)
 {
 	glGenVertexArrays(1, &env->vao);
@@ -263,7 +263,7 @@ void	ft_test(t_env *env)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, env->ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(t_vec3int) * env->obj.triangles_nbr, env->obj.triangle_indices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
     glEnableVertexAttribArray(0);
 
     // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
@@ -332,8 +332,73 @@ void	ft_test2(t_env *env)
     glDeleteBuffers(1, &env->vbo);
     glDeleteProgram(env->shader_program);
 }
+*/
 
 
+void	ft_test(t_env *env)
+{
+
+    glGenVertexArrays(1, &env->vao);
+    glGenBuffers(1, &env->vbo);
+    glGenBuffers(1, &env->ebo);
+    // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+    glBindVertexArray(env->vao);
+
+    glBindBuffer(GL_ARRAY_BUFFER, env->vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 4 * env->obj.vertices_nbr, env->obj.vertices, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, env->ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * 3 * env->obj.triangles_nbr, env->obj.triangle_indices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    glEnableVertexAttribArray(0);
+
+    // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
+    glBindBuffer(GL_ARRAY_BUFFER, 0); 
+
+    // remember: do NOT unbind the EBO while a VAO is active as the bound element buffer object IS stored in the VAO; keep the EBO bound.
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
+    // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
+    glBindVertexArray(0); 
+
+
+    // uncomment this call to draw in wireframe polygons.
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+    // render loop
+    // -----------
+    while (!glfwWindowShouldClose(env->win))
+    {
+        // render
+        // ------
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        // draw our first triangle
+        glUseProgram(env->shader_program);
+        glBindVertexArray(env->vao); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+        //glDrawArrays(GL_TRIANGLES, 0, 6);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        // glBindVertexArray(0); // no need to unbind it every time 
+ 
+        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+        // -------------------------------------------------------------------------------
+        glfwSwapBuffers(env->win);
+        glfwPollEvents();
+    }
+
+    // optional: de-allocate all resources once they've outlived their purpose:
+    // ------------------------------------------------------------------------
+    glDeleteVertexArrays(1, &env->vao);
+    glDeleteBuffers(1, &env->vbo);
+    glDeleteBuffers(1, &env->ebo);
+
+    // glfw: terminate, clearing all previously allocated GLFW resources.
+    // ------------------------------------------------------------------
+    glfwTerminate();
+}
 
 void	ft_loop(t_env *env)
 {
@@ -360,6 +425,7 @@ void	ft_loop(t_env *env)
 
 void	ft_close(t_env *env)
 {
+    glDeleteProgram(env->shader_program);
 	ft_glfw_close(env);
 	ft_free_env(env);
 }
