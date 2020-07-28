@@ -20,7 +20,7 @@ LIBS = ./libs/libft/libft.a \
 
 INCLUDES = -I includes/ -I ./libs/mlx/ -I ./libs/libft/includes/ -I ./libs/ft_printf/includes/ -I/Users/toliver/.brew/Cellar/glfw/3.3.2/include
 
-FLAGS = -Wall -Wextra -Werror -Ofast
+FLAGS = -Wall -Wextra -Werror -Ofast -fsanitize=address
 
 MLXFLAGS = -framework OpenGL `pkg-config --static --libs glfw3`
 

@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/18 11:36:21 by toliver           #+#    #+#             */
-/*   Updated: 2020/07/28 00:46:13 by toliver          ###   ########.fr       */
+/*   Updated: 2020/07/28 03:14:56 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,107 @@ void	ft_display_infos(void)
 	printf("OpenGL version supported %s\n", version);
 }
 
+int		ft_create_buffers(t_env *env)
+{
+	glGenBuffers(1, &(env->vbo));
+	glBindBuffer(GL_ARRAY_BUFFER, env->vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(env->obj.vertices) * env->obj.vertices_nbr, env->obj.vertices, GL_STATIC_DRAW);
+
+	glGenBuffers(1, &(env->vao));
+	return (1);
+}
+
+int		ft_init_vertex_shader(t_env *env)
+{
+	int  		success;
+	char		buf[513];
+	const char	*vertexShaderSource = "#version 330 core\n"
+    "layout (location = 0) in vec4 aPos;\n"
+    "void main()\n"
+    "{\n"
+    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, aPos.w);\n"
+    "}\0";
+
+	env->vertex_shader = glCreateShader(GL_VERTEX_SHADER);	
+	glShaderSource(env->vertex_shader, 1, &vertexShaderSource, NULL);
+	glCompileShader(env->vertex_shader);
+	glGetShaderiv(env->vertex_shader, GL_COMPILE_STATUS, &success);
+	if (!success)
+	{
+		ft_bzero(buf, 513);
+		glGetShaderInfoLog(env->vertex_shader, 512, NULL, buf);
+		ft_dprintf(2, "Couldn't Compile Vertex Shader: %s\n", buf);
+		return (0);
+	}
+	return (1);
+}
+
+int		ft_init_fragment_shader(t_env *env)
+{
+	int  		success;
+	char		buf[513];
+	const char *fragmentShaderSource = "#version 330 core\n"
+    "out vec4 FragColor;\n"
+    "void main()\n"
+    "{\n"
+    "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+    "}\n\0";
+
+	env->fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);	
+	glShaderSource(env->fragment_shader, 1, &fragmentShaderSource, NULL);
+	glCompileShader(env->fragment_shader);
+	glGetShaderiv(env->fragment_shader, GL_COMPILE_STATUS, &success);
+	if (!success)
+	{
+		ft_bzero(buf, 513);
+		glGetShaderInfoLog(env->fragment_shader, 512, NULL, buf);
+		ft_dprintf(2, "Couldn't Compile Fragment Shader: %s\n", buf);
+		return (0);
+	}
+	return (1);
+}
+
+int		ft_init_shader_program(t_env *env)
+{
+	int  		success;
+	char		buf[513];
+
+	env->shader_program = glCreateProgram();
+	glAttachShader(env->shader_program, env->vertex_shader);
+	glAttachShader(env->shader_program, env->fragment_shader);
+	glLinkProgram(env->shader_program);
+	glGetProgramiv(env->shader_program, GL_LINK_STATUS, &success);
+	if (!success)
+	{
+		ft_bzero(buf, 513);
+		glGetShaderInfoLog(env->shader_program, 512, NULL, buf);
+		ft_dprintf(2, "Couldn't Link Shader Program: %s\n", buf);
+		return (0);
+	}
+	return (1);
+}
+
+int		ft_init_shaders(t_env *env)
+{
+	if (!ft_init_vertex_shader(env))
+		return (0);
+	if (!ft_init_fragment_shader(env))
+	{
+		glDeleteShader(env->vertex_shader);
+		return (0);
+	}
+	if (!ft_init_shader_program(env))
+	{
+		glDeleteShader(env->vertex_shader);
+		glDeleteShader(env->fragment_shader);
+		return (0);
+	}
+	glUseProgram(env->shader_program);
+	glDeleteShader(env->vertex_shader);
+	glDeleteShader(env->fragment_shader);
+	return (1);
+}
+
 int		ft_init(t_env *env)
 {
 	(void)env;
@@ -121,6 +222,11 @@ int		ft_init(t_env *env)
 		return (0);
 	glfwSetKeyCallback(env->win, key_callback);
 	ft_display_infos();
+	ft_init_shaders(env);
+	ft_create_buffers(env);
+
+	
+	// still have to link buffers, but dont know how to do it T-T
 	// tell GL to only draw onto a pixel if the shape is closer to the viewer
 	//	glEnable(GL_DEPTH_TEST); // enable depth-testing
 	//	glDepthFunc(GL_LESS); // depth-testing interprets a smaller value as "closer"
@@ -131,56 +237,6 @@ int		ft_init(t_env *env)
 
 void	ft_test(t_env *env)
 {
-	const char *vertexShaderSource = "#version 330 core\n"
-    "layout (location = 0) in vec3 aPos;\n"
-    "void main()\n"
-    "{\n"
-    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-    "}\0";
-const char *fragmentShaderSource = "#version 330 core\n"
-    "out vec4 FragColor;\n"
-    "void main()\n"
-    "{\n"
-    "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-    "}\n\0";
-
-   int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    glCompileShader(vertexShader);
-    // check for shader compile errors
-    int success;
-    char infoLog[512];
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        ft_printf("error in compilation\n");
-    }
-    // fragment shader
-    int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    glCompileShader(fragmentShader);
-    // check for shader compile errors
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
-        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        ft_printf("error in compilation\n");
-    }
-    // link shaders
-    int shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-    // check for linking errors
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if (!success) {
-        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-        ft_printf("error in linking\n");
-    }
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
-
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
     float vertices[] = {
@@ -222,7 +278,7 @@ const char *fragmentShaderSource = "#version 330 core\n"
         glClear(GL_COLOR_BUFFER_BIT);
 
         // draw our first triangle
-        glUseProgram(shaderProgram);
+        glUseProgram(env->shader_program);
         glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
         glDrawArrays(GL_TRIANGLES, 0, 3);
         // glBindVertexArray(0); // no need to unbind it every time
@@ -237,7 +293,7 @@ const char *fragmentShaderSource = "#version 330 core\n"
     // ------------------------------------------------------------------------
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
-    glDeleteProgram(shaderProgram);
+    glDeleteProgram(env->shader_program);
 
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------
@@ -256,8 +312,8 @@ void	ft_loop(t_env *env)
 	glfwSwapInterval(1);
 
 
-//	ft_test(env);
-//	return ;
+	ft_test(env);
+	return ;
 	while (!glfwWindowShouldClose(env->win))
 	{
 		glfwSwapBuffers(env->win);
@@ -288,8 +344,8 @@ int		main(int ac, char **av)
 		ft_free_env(env);
 		return (-1);
 	}
-//	ft_init(env);
-//	ft_loop(env);	
-//	ft_close(env);
+	ft_init(env);
+	ft_loop(env);	
+	ft_close(env);
 	return (0);
 }
