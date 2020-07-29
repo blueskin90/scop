@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/18 11:35:10 by toliver           #+#    #+#             */
-/*   Updated: 2020/07/28 20:16:41 by toliver          ###   ########.fr       */
+/*   Updated: 2020/07/29 18:37:02 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 #include <OpenGL/gl3.h>
 #include <GLFW/glfw3.h> // GLFW helper library
 #include <sys/errno.h>
+#include <math.h>
 
 #define INT_MAX 2147483647
 #define INT_MIN -2147483648
@@ -33,6 +34,13 @@
 
 #define MAJOR_V 4
 #define MINOR_V 0
+
+enum			e_matrix
+{
+	IDENTITY,
+	TRANSLATION,
+	ROTATION,
+};
 
 typedef struct	s_vec3int
 {
@@ -52,16 +60,21 @@ typedef struct	s_vec4
 	float		w;
 }				t_vec4;
 
+typedef struct	s_mat4
+{
+	GLfloat		val[4][4];
+}				t_mat4;
+
 enum	e_errors
 {
 	MALLOC,
 	NO_VALID_OBJ,
 	INVALID_FILE,
+	MY_OVERFLOW,
 	OPEN,
 	TOO_MANY_OBJECTS,
 	PARSING_ERROR,
 	UNEXPECTED_TOKEN,
-	OVERFLOW,
 	NOT_ENOUGH_INDICES,
 	WRONG_FACE_VALUE,
 	NO_FACES,
@@ -73,6 +86,24 @@ typedef struct	s_face
 	size_t		size;
 	int			*arr;
 }				t_face;
+
+typedef struct	s_cam
+{
+	t_vec4		pos;
+	t_vec4		dir;
+	float		roll;
+}				t_cam;
+
+typedef struct	s_mvp
+{
+	t_mat4		trans;
+	GLint		uni_trans;
+	t_mat4		rot;
+	GLint		uni_rot;
+	t_mat4		obj_to_world;
+	t_mat4		world_to_view;
+	t_mat4		view_projection;
+}				t_mvp;
 
 typedef struct	s_obj
 {
@@ -100,8 +131,9 @@ typedef struct		s_env
 	GLuint			vertex_shader;
 	GLuint			fragment_shader;
 	GLuint			shader_program;
-
-	// rajouter un array d'indices par paquet de 3, 4
+	t_cam			cam;
+	t_mvp			mvp;
+	float			delta_time;
 }					t_env;
 
 enum	e_parse_mode
@@ -122,9 +154,47 @@ extern const char * const g_error_value[MAXVALUE + 1];
 
 
 int		obj_parse(t_env *env, char *file);
+
+/*
+** UTILS FUNCTIONS
+*/
+
 int		ft_parsing_error(char *line, int *mode);
 int		ft_error(int error, char *str);
 t_env	*ft_getenv(void);
+void	ft_setenv(t_env *env);
 int		ft_error(int error, char *str);
+void	ft_usage(void);
+
+/*
+** CALLBACK FUNCTIONS
+*/
+
+void	error_callback(int error, const char* description);
+void	key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+
+/*
+** INIT FUNCTIONS
+*/
+
+int		ft_init(t_env *env);
+
+/*
+** VECTOR FUNCTIONS
+*/
+
+t_vec4	vec_set(float x, float y, float z);
+t_vec4	vec_add(t_vec4 a, t_vec4 b);
+t_vec4	vec_sub(t_vec4 a, t_vec4 b);
+t_vec4	vec_opp(t_vec4 a);
+t_vec4	vec_mul(t_vec4 a, float val);
+t_vec4	vec_normalize(t_vec4 a);
+
+/*
+** MATRIX FUNCTIONS
+*/
+
+void	ft_matrix_set_identity(t_mat4 *ptr);
+void	ft_matrix_set_tran(t_mat4 *ptr, t_vec4 tran);
 
 #endif

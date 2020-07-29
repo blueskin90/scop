@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 20:11:35 by toliver           #+#    #+#             */
-/*   Updated: 2020/07/28 20:16:41 by toliver          ###   ########.fr       */
+/*   Updated: 2020/07/29 18:30:09 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ int		*alloc_indice_arr(size_t *size, char *line, int *mode)
 		return (NULL);
 	if ((*size) * sizeof(int) / (*size) != sizeof(int))
 	{
-		ft_error(OVERFLOW, NULL);
+		ft_error(MY_OVERFLOW, NULL);
 		*mode = ERR;
 		return (NULL);
 	}
@@ -146,7 +146,7 @@ int		add_face(size_t size, int *arr, t_obj *obj, int *mode)
 		if (obj->faces_arr_size < 50)
 		{
 			*mode = ERR;
-			ft_error(OVERFLOW, NULL);
+			ft_error(MY_OVERFLOW, NULL);
 			return (0);
 		}
 		obj->faces = (t_face*)realloc(obj->faces,
@@ -197,7 +197,7 @@ int		add_vertex(t_vec4 *vec, t_obj *obj, int *mode)
 		if (obj->vertices_arr_size < 50)
 		{
 			*mode = ERR;
-			ft_error(OVERFLOW, NULL);
+			ft_error(MY_OVERFLOW, NULL);
 			return (0);
 		}
 		obj->vertices = (t_vec4*)realloc(obj->vertices,

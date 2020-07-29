@@ -6,7 +6,7 @@
 #    By: toliver <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/09/20 19:50:33 by toliver           #+#    #+#              #
-#    Updated: 2020/07/12 20:32:58 by toliver          ###   ########.fr        #
+#    Updated: 2020/07/29 18:19:19 by toliver          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,6 +30,9 @@ OBJS = $(addprefix objs/, $(addsuffix .o, \
 			parsing \
 			singleton \
 			error \
+			utils \
+			init \
+			vec \
 			) \
 		)) 
 
