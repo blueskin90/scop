@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/29 17:30:39 by toliver           #+#    #+#             */
-/*   Updated: 2020/07/29 23:07:06 by toliver          ###   ########.fr       */
+/*   Updated: 2020/07/29 23:45:28 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int		ft_init_vertex_shader(t_env *env)
 	"uniform mat4 rot;\n"
     "void main()\n"
     "{\n"
-    "   gl_Position = trans * rot * vec4(aPos.x, aPos.y, aPos.z, aPos.w);\n"
+    "   gl_Position = rot * trans * vec4(aPos.x, aPos.y, aPos.z, aPos.w);\n"
     "}\0";
 
 	env->vertex_shader = glCreateShader(GL_VERTEX_SHADER);	
@@ -196,11 +196,22 @@ void	ft_matrix_set_tran(t_mat4 *ptr, t_vec4 tran)
 
 void	ft_matrix_set_rot(t_mat4 *mat, t_vec4 axis, float angle)
 {
-	ft_matrix_set_identity(mat);
+	float	sin;
+	float	cos;
+
 	angle = degtorad(angle);
-	(void)mat;
-	(void)axis;
-	(void)angle;
+	sin = sinf(angle);
+	cos = cosf(angle);
+	ft_matrix_set_identity(mat);
+	mat->val[0][0] = cos + axis.x * axis.x * (1.0 - cos);
+	mat->val[0][1] = axis.x * axis.y * (1.0 - cos) + axis.z * sin;
+	mat->val[0][2] = axis.x * axis.z * (1.0 - cos) - axis.y * sin;
+	mat->val[1][0] = axis.x * axis.y * (1.0 - cos) - axis.z * sin;
+	mat->val[1][1] = cos + axis.y * axis.y * (1.0 - cos);
+	mat->val[1][2] = axis.y * axis.z * (1.0 - cos) + axis.x * sin;
+	mat->val[2][0] = axis.x * axis.z * (1.0 - cos) + axis.y * sin;
+	mat->val[2][1] = axis.y * axis.z * (1.0 - cos) - axis.x * sin;
+	mat->val[2][2] = cos + axis.z * axis.z * (1.0 - cos);
 }
 
 void	ft_matrix_dump(t_mat4 *ptr)
@@ -220,6 +231,18 @@ void	ft_set_matrix(t_env *env)
 	glUniformMatrix4fv(env->mvp.uni_trans, 1, GL_FALSE, (float*)&env->mvp.trans);
 	env->mvp.uni_rot = glGetUniformLocation(env->shader_program, "rot");
 	glUniformMatrix4fv(env->mvp.uni_rot, 1, GL_FALSE, (float*)&env->mvp.rot);
+}
+
+t_vec4	ft_matrix_mult_vec(t_mat4 *mat, t_vec4 vec)
+{
+	float	x;
+	float	y;
+	float	z;
+
+	x = vec.x * mat->val[0][0] + vec.y * mat->val[1][0] + vec.z * mat->val[2][0] + mat->val[3][0];
+	y = vec.x * mat->val[0][1] + vec.y * mat->val[1][1] + vec.z * mat->val[2][1] + mat->val[3][1];
+	z = vec.x * mat->val[0][2] + vec.y * mat->val[1][2] + vec.z * mat->val[2][2] + mat->val[3][2];
+	return ((t_vec4){x, y, z, 1});
 }
 
 void	ft_init_camera(t_cam *cam)
@@ -242,11 +265,7 @@ int		ft_init(t_env *env)
 	ft_create_buffers(env);
 	ft_init_camera(&env->cam);
 	ft_set_matrix(env);
-
-	
 	//	glEnable(GL_DEPTH_TEST); // enable depth-testing
 	//	glDepthFunc(GL_LESS); // depth-testing interprets a smaller value as "closer"
-
-
 	return (1);
 }

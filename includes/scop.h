@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/18 11:35:10 by toliver           #+#    #+#             */
-/*   Updated: 2020/07/29 22:27:10 by toliver          ###   ########.fr       */
+/*   Updated: 2020/07/29 23:25:09 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,6 +197,7 @@ t_vec4	vec_normalize(t_vec4 a);
 
 void	ft_matrix_set_identity(t_mat4 *ptr);
 void	ft_matrix_set_tran(t_mat4 *ptr, t_vec4 tran);
+void	ft_matrix_set_rot(t_mat4 *mat, t_vec4 axis, float angle);
 
 /*
 ** INPUT FUNCTIONS

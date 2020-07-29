@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/18 11:36:21 by toliver           #+#    #+#             */
-/*   Updated: 2020/07/29 22:54:38 by toliver          ###   ########.fr       */
+/*   Updated: 2020/07/29 23:45:28 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,17 @@ void	ft_glfw_close(t_env *env)
 
 void	ft_matrix_use(t_env *env)
 {
+	static float angle = 0;
 	ft_matrix_set_tran(&env->mvp.trans, vec_opp(env->cam.pos));
 	glUniformMatrix4fv(env->mvp.uni_trans, 1, GL_FALSE, (float*)&env->mvp.trans);
+	ft_matrix_set_rot(&env->mvp.rot, env->cam.front, angle);
+	glUniformMatrix4fv(env->mvp.uni_rot, 1, GL_FALSE, (float*)&env->mvp.rot);
+	angle += 0.1;
 }
 
 void	ft_test(t_env *env)
 {
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
     // render loop
     // -----------
 	glfwSetTime(0);
