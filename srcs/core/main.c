@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/18 11:36:21 by toliver           #+#    #+#             */
-/*   Updated: 2020/07/29 18:39:40 by toliver          ###   ########.fr       */
+/*   Updated: 2020/07/29 22:54:38 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ void	ft_test(t_env *env)
     {
 		env->delta_time = (float)glfwGetTime();
 		glfwSetTime(0);
+		ft_move_camera(env);
 		ft_matrix_use(env);
         // render
         // ------

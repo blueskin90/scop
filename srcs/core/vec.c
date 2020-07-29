@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/29 18:18:38 by toliver           #+#    #+#             */
-/*   Updated: 2020/07/29 18:39:16 by toliver          ###   ########.fr       */
+/*   Updated: 2020/07/29 23:07:08 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ t_vec4	vec_normalize(t_vec4 a)
 	float	norm;
 	
 	norm = vec_norm(a);
+	if (norm == 0)
+		return (a);
 	return ((t_vec4){a.x / norm, a.y / norm, a.z / norm, 1});
 }
 

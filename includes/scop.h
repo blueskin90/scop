@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/18 11:35:10 by toliver           #+#    #+#             */
-/*   Updated: 2020/07/29 18:37:02 by toliver          ###   ########.fr       */
+/*   Updated: 2020/07/29 22:27:10 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,9 @@ typedef struct	s_face
 typedef struct	s_cam
 {
 	t_vec4		pos;
-	t_vec4		dir;
-	float		roll;
+	t_vec4		front;
+	t_vec4		up;
+	t_vec4		right;
 }				t_cam;
 
 typedef struct	s_mvp
@@ -196,5 +197,11 @@ t_vec4	vec_normalize(t_vec4 a);
 
 void	ft_matrix_set_identity(t_mat4 *ptr);
 void	ft_matrix_set_tran(t_mat4 *ptr, t_vec4 tran);
+
+/*
+** INPUT FUNCTIONS
+*/
+
+void	ft_move_camera(t_env *env);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/29 17:30:39 by toliver           #+#    #+#             */
-/*   Updated: 2020/07/29 18:34:51 by toliver          ###   ########.fr       */
+/*   Updated: 2020/07/29 23:07:06 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,6 +163,16 @@ int		ft_init_shaders(t_env *env)
 	return (1);
 }
 
+float		degtorad(float deg)
+{
+	return (deg * M_PI / 180);
+}
+
+float		radtodeg(float rad)
+{
+	return (rad * 180 / M_PI);
+}
+
 void	ft_matrix_set_identity(t_mat4 *ptr)
 {
 	ft_bzero(ptr, sizeof(t_mat4));
@@ -182,6 +192,15 @@ void	ft_matrix_set_tran(t_mat4 *ptr, t_vec4 tran)
 	ptr->val[3][0] = tran.x;
 	ptr->val[3][1] = tran.y;
 	ptr->val[3][2] = tran.z;
+}
+
+void	ft_matrix_set_rot(t_mat4 *mat, t_vec4 axis, float angle)
+{
+	ft_matrix_set_identity(mat);
+	angle = degtorad(angle);
+	(void)mat;
+	(void)axis;
+	(void)angle;
 }
 
 void	ft_matrix_dump(t_mat4 *ptr)
@@ -205,7 +224,9 @@ void	ft_set_matrix(t_env *env)
 
 void	ft_init_camera(t_cam *cam)
 {
-	cam->dir.y = 1;
+	cam->front.z = -1;
+	cam->up.y = 1;
+	cam->right.x = 1;
 }
 
 int		ft_init(t_env *env)
