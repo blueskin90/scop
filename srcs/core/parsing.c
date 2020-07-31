@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 20:11:35 by toliver           #+#    #+#             */
-/*   Updated: 2020/07/29 23:06:58 by toliver          ###   ########.fr       */
+/*   Updated: 2020/07/31 07:10:56 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -430,6 +430,58 @@ void	ft_dump_indices(t_obj *obj)
 	}
 }
 
+void	ft_find_center(t_obj *obj, float *x, float *y, float *z)
+{
+	t_vec4	min;
+	t_vec4	max;
+	size_t	i;
+
+	ft_bzero(&min, sizeof(t_vec4));
+	ft_bzero(&max, sizeof(t_vec4));
+	if (obj->vertices_nbr > 0)
+	{
+		min = vec_set(obj->vertices[0].x, obj->vertices[0].y, obj->vertices[0].z);
+		max = vec_set(obj->vertices[0].x, obj->vertices[0].y, obj->vertices[0].z);
+	}
+	i = 1;
+	while (i < obj->vertices_nbr)
+	{
+		if (obj->vertices[i].x < min.x)
+			min.x = obj->vertices[i].x;
+		else if (obj->vertices[i].x > max.x)
+			max.x = obj->vertices[i].x;
+		if (obj->vertices[i].y < min.y)
+			min.y = obj->vertices[i].y;
+		else if (obj->vertices[i].y > max.y)
+			max.y = obj->vertices[i].y;
+		if (obj->vertices[i].z < min.z)
+			min.z = obj->vertices[i].z;
+		else if (obj->vertices[i].z > max.z)
+			max.z = obj->vertices[i].z;
+		i++;
+	}
+	*x = (min.x + max.x) / 2.0;
+	*y = (min.y + max.y) / 2.0;
+	*z = (min.z + max.z) / 2.0;
+}
+
+void	ft_center_object(t_obj *obj)
+{
+	t_vec4	offset;
+	size_t	i;
+
+	ft_find_center(obj, &offset.x, &offset.y, &offset.z);
+	i = 0;
+	while (i < obj->vertices_nbr)
+	{
+		obj->vertices[i] = vec_sub(obj->vertices[i], offset);
+		i++;
+	}
+	obj->zaxis = vec_set(0, 0, -1);
+	obj->xaxis = vec_set(1, 0, 0);
+	obj->yaxis = vec_set(0, 1, 0);
+}
+
 int		obj_parse(t_env *env, char *file)
 {
 	int		fd;
@@ -444,6 +496,7 @@ int		obj_parse(t_env *env, char *file)
 		return (0);
 	if (!ft_parse_indices(&env->obj))
 		return (0);
+	ft_center_object(&env->obj);
 	ft_dump_obj(&env->obj);
 	ft_dump_indices(&env->obj);
 	return (1);

@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/29 17:30:39 by toliver           #+#    #+#             */
-/*   Updated: 2020/07/29 23:45:28 by toliver          ###   ########.fr       */
+/*   Updated: 2020/07/31 07:10:56 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,10 @@ int		ft_init_vertex_shader(t_env *env)
     "layout (location = 0) in vec4 aPos;\n"
 	"uniform mat4 trans;\n"
 	"uniform mat4 rot;\n"
+	"uniform mat4 scale;\n"
     "void main()\n"
     "{\n"
-    "   gl_Position = rot * trans * vec4(aPos.x, aPos.y, aPos.z, aPos.w);\n"
+    "   gl_Position = scale * trans * rot * vec4(aPos.x, aPos.y, aPos.z, aPos.w);\n"
     "}\0";
 
 	env->vertex_shader = glCreateShader(GL_VERTEX_SHADER);	
@@ -214,6 +215,15 @@ void	ft_matrix_set_rot(t_mat4 *mat, t_vec4 axis, float angle)
 	mat->val[2][2] = cos + axis.z * axis.z * (1.0 - cos);
 }
 
+void	ft_matrix_set_scale(t_mat4 *ptr, float scale)
+{
+	ft_bzero(ptr, sizeof(t_mat4));
+	ptr->val[0][0] = scale;
+	ptr->val[1][1] = scale;
+	ptr->val[2][2] = scale;
+	ptr->val[3][3] = 1;
+}
+
 void	ft_matrix_dump(t_mat4 *ptr)
 {
 	ft_printf("[%.2f][%.2f][%.2f][%.2f]\n", ptr->val[0][0], ptr->val[0][1], ptr->val[0][2], ptr->val[0][3]);
@@ -226,11 +236,15 @@ void	ft_set_matrix(t_env *env)
 {
 	ft_matrix_set_identity(&env->mvp.trans);
 	ft_matrix_set_identity(&env->mvp.rot);
+	ft_matrix_set_scale(&env->mvp.scale, 1);
 
 	env->mvp.uni_trans = glGetUniformLocation(env->shader_program, "trans");
 	glUniformMatrix4fv(env->mvp.uni_trans, 1, GL_FALSE, (float*)&env->mvp.trans);
 	env->mvp.uni_rot = glGetUniformLocation(env->shader_program, "rot");
 	glUniformMatrix4fv(env->mvp.uni_rot, 1, GL_FALSE, (float*)&env->mvp.rot);
+	env->mvp.uni_scale = glGetUniformLocation(env->shader_program, "scale");
+	glUniformMatrix4fv(env->mvp.uni_scale, 1, GL_FALSE, (float*)&env->mvp.scale);
+
 }
 
 t_vec4	ft_matrix_mult_vec(t_mat4 *mat, t_vec4 vec)
@@ -245,11 +259,41 @@ t_vec4	ft_matrix_mult_vec(t_mat4 *mat, t_vec4 vec)
 	return ((t_vec4){x, y, z, 1});
 }
 
+t_mat4	ft_matrix_mult_matrix(t_mat4 *a, t_mat4 *b)
+{
+	t_mat4		c;
+	int			x;
+	int			y;
+
+	y = 0;
+	while (y < 4)
+	{
+		x = 0;
+		while (x < 4)
+		{
+			c.val[y][x] = a->val[y][0] * b->val[0][x]
+				+ a->val[y][1] * b->val[1][x]
+				+ a->val[y][2] * b->val[2][x]
+				+ a->val[y][3] * b->val[3][x];
+			x++;
+		}
+		y++;
+	}
+	return (c);
+}
+
 void	ft_init_camera(t_cam *cam)
 {
-	cam->front.z = -1;
-	cam->up.y = 1;
-	cam->right.x = 1;
+	cam->front = vec_normalize(vec_set(0, 0, -1));
+	cam->up = vec_normalize(vec_set(0, 1, 0));
+	cam->right = vec_normalize(vec_set(1, 0, 0));
+	cam->scale = 1;
+}
+
+void	ft_init_cursor(t_env *env)
+{
+	glfwGetCursorPos(env->win, &env->curs.xpos, &env->curs.ypos);
+	env->curs.mode = NORMAL;
 }
 
 int		ft_init(t_env *env)
@@ -260,12 +304,15 @@ int		ft_init(t_env *env)
 	if (!ft_init_window(env))
 		return (0);
 	glfwSetKeyCallback(env->win, key_callback);
+	glfwSetScrollCallback(env->win, scroll_callback);
+	glfwSetMouseButtonCallback(env->win, mouse_click_callback);
 	ft_display_infos();
 	ft_init_shaders(env);
 	ft_create_buffers(env);
 	ft_init_camera(&env->cam);
 	ft_set_matrix(env);
-	//	glEnable(GL_DEPTH_TEST); // enable depth-testing
-	//	glDepthFunc(GL_LESS); // depth-testing interprets a smaller value as "closer"
+	ft_init_cursor(env);
+//		glEnable(GL_DEPTH_TEST); // enable depth-testing
+//		glDepthFunc(GL_LESS); // depth-testing interprets a smaller value as "closer"
 	return (1);
 }
