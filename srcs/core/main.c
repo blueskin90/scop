@@ -37,9 +37,10 @@ void	ft_matrix_use(t_env *env)
 	ft_matrix_set_tran(&env->mvp.trans, vec_opp(env->cam.pos));
 	glUniformMatrix4fv(env->mvp.uni_trans, 1, GL_FALSE, (float*)&env->mvp.trans);
 //	ft_matrix_set_rot(&env->mvp.rot, env->cam.front, angle);
-	glUniformMatrix4fv(env->mvp.uni_rot, 1, GL_FALSE, (float*)&env->mvp.rot);
 	ft_matrix_set_scale(&env->mvp.scale, env->cam.scale);
 	glUniformMatrix4fv(env->mvp.uni_scale, 1, GL_FALSE, (float*)&env->mvp.scale);
+	glUniformMatrix4fv(env->mvp.uni_local, 1, GL_FALSE, (float*)&env->mvp.local_transform);
+	glUniformMatrix4fv(env->mvp.uni_obj_to_world, 1, GL_FALSE, (float*)&env->mvp.obj_to_world);
 }
 
 void	ft_move_camera(t_env *env)
@@ -52,30 +53,36 @@ void	ft_move_camera(t_env *env)
 		vec = vec_add(vec, vec_mul(env->cam.right, -env->curs.xdiff));
 		vec = vec_add(vec, vec_mul(env->cam.up, env->curs.ydiff));
 	}
+	vec = vec_mul(vec, env->delta_time * env->cam.scale);
 	env->cam.pos = vec_add(env->cam.pos, vec_mul(vec, env->delta_time * env->cam.scale));
 }
 
 void	ft_rotate_camera(t_env *env)
 {
-	static float zangle = 0;
-	static float yangle = 0;
-	static float xangle = 0;
+	float zangle = 0;
+	float yangle = 0;
+	float xangle = 0;
+	t_mat4	total_rot;
 
+	ft_matrix_set_identity(&total_rot);
 	if (env->curs.mode == RIGHT_CLICK)
 	{
 		zangle += 1.0 * env->curs.xdiff * env->delta_time * SPEED;
-		ft_matrix_set_rot(&env->mvp.rot, env->obj.zaxis, zangle);
+		ft_matrix_set_rot(&env->mvp.rot, env->cam.front, zangle);
+		total_rot = ft_matrix_mult_matrix(&total_rot, &env->mvp.rot);
 	}
-	else if (env->curs.mode == LEFT_CLICK && abs(env->curs.xdiff) > abs(env->curs.ydiff))
+	else if (env->curs.mode == LEFT_CLICK)
 	{
-		yangle += 1.0 * env->curs.xdiff * env->delta_time * SPEED;
-		ft_matrix_set_rot(&env->mvp.rot, env->obj.yaxis, yangle);
+		yangle = 1.0 * env->curs.xdiff * env->delta_time * SPEED;
+		ft_matrix_set_rot(&env->mvp.rot, env->cam.up, yangle);
+		total_rot = ft_matrix_mult_matrix(&total_rot, &env->mvp.rot);
+
+		xangle = 1.0 * env->curs.ydiff * env->delta_time * SPEED;
+		ft_matrix_set_rot(&env->mvp.rot, vec_opp(env->cam.right), xangle);
+		total_rot = ft_matrix_mult_matrix(&total_rot, &env->mvp.rot);
 	}
-	else if (env->curs.mode == LEFT_CLICK && abs(env->curs.xdiff) < abs(env->curs.ydiff))
-	{
-		xangle += 1.0 * env->curs.ydiff * env->delta_time * SPEED;
-		ft_matrix_set_rot(&env->mvp.rot, env->obj.xaxis, xangle);
-	}
+	env->mvp.obj_to_world = ft_matrix_mult_matrix(&env->mvp.obj_to_world, &total_rot);
+	env->obj.yaxis = vec_normalize(ft_matrix_mult_vec(&total_rot, env->obj.yaxis));
 }
 
 void	get_cursor(t_env *env)
@@ -101,6 +108,17 @@ void	get_time(t_env *env)
 	glfwSetTime(0);
 }
 
+void	ft_rotate_object(t_env *env)
+{
+	t_mat4	mat;
+
+	if (env->obj.rotating == 1)
+	{
+		ft_matrix_set_rot(&mat, env->obj.yaxis, 10 * env->delta_time);
+		env->mvp.local_transform = ft_matrix_mult_matrix(&mat, &env->mvp.local_transform);
+	}
+}
+
 void	ft_test(t_env *env)
 {
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -113,6 +131,7 @@ void	ft_test(t_env *env)
 		get_cursor(env);
 		ft_move_camera(env);
 		ft_rotate_camera(env);
+		ft_rotate_object(env);
 		ft_matrix_use(env);
 
         // render
@@ -152,15 +171,14 @@ void	ft_loop(t_env *env)
 	glViewport(0, 0, width, height);
 	glfwSwapInterval(1);
 
-
 	ft_test(env);
 	return ;
-	while (!glfwWindowShouldClose(env->win))
-	{
-		glfwSwapBuffers(env->win);
-		glfwPollEvents();
+//	while (!glfwWindowShouldClose(env->win))
+//	{
+//		glfwSwapBuffers(env->win);
+//		glfwPollEvents();
 		// Keep running
-	}
+//	}
 }
 
 void	ft_close(t_env *env)

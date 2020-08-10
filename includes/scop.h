@@ -105,6 +105,9 @@ typedef struct	s_mvp
 	GLint		uni_rot;
 	t_mat4		scale;
 	GLint		uni_scale;
+	GLint		uni_local;
+	t_mat4		local_transform;
+	GLint		uni_obj_to_world;
 	t_mat4		obj_to_world;
 	t_mat4		world_to_view;
 	t_mat4		view_projection;
@@ -123,6 +126,7 @@ typedef struct	s_obj
 	unsigned int	*triangle_indices;
 	unsigned int	quad_nbr;
 	unsigned int	*quad_indices;
+	int				rotating;
 	t_vec4			zaxis;
 	t_vec4			yaxis;
 	t_vec4			xaxis;
@@ -227,6 +231,7 @@ void	ft_matrix_set_tran(t_mat4 *ptr, t_vec4 tran);
 void	ft_matrix_set_rot(t_mat4 *mat, t_vec4 axis, float angle);
 void	ft_matrix_set_scale(t_mat4 *ptr, float scale);
 t_vec4	ft_matrix_mult_vec(t_mat4 *mat, t_vec4 vec);
+t_mat4	ft_matrix_mult_matrix(t_mat4 *a, t_mat4 *b);
 
 /*
 ** INPUT FUNCTIONS

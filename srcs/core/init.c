@@ -77,11 +77,12 @@ int		ft_init_vertex_shader(t_env *env)
 	const char	*vertexShaderSource = "#version 330 core\n"
     "layout (location = 0) in vec4 aPos;\n"
 	"uniform mat4 trans;\n"
-	"uniform mat4 rot;\n"
 	"uniform mat4 scale;\n"
+	"uniform mat4 local;\n"
+	"uniform mat4 obj_to_world;\n"
     "void main()\n"
     "{\n"
-    "   gl_Position = scale * trans * rot * vec4(aPos.x, aPos.y, aPos.z, aPos.w);\n"
+    "   gl_Position = local * scale * trans * obj_to_world * vec4(aPos.x, aPos.y, aPos.z, aPos.w);\n"
     "}\0";
 
 	env->vertex_shader = glCreateShader(GL_VERTEX_SHADER);	
@@ -237,13 +238,18 @@ void	ft_set_matrix(t_env *env)
 	ft_matrix_set_identity(&env->mvp.trans);
 	ft_matrix_set_identity(&env->mvp.rot);
 	ft_matrix_set_scale(&env->mvp.scale, 1);
+	ft_matrix_set_identity(&env->mvp.local_transform);
+	ft_matrix_set_identity(&env->mvp.obj_to_world);
 
 	env->mvp.uni_trans = glGetUniformLocation(env->shader_program, "trans");
 	glUniformMatrix4fv(env->mvp.uni_trans, 1, GL_FALSE, (float*)&env->mvp.trans);
-	env->mvp.uni_rot = glGetUniformLocation(env->shader_program, "rot");
-	glUniformMatrix4fv(env->mvp.uni_rot, 1, GL_FALSE, (float*)&env->mvp.rot);
 	env->mvp.uni_scale = glGetUniformLocation(env->shader_program, "scale");
 	glUniformMatrix4fv(env->mvp.uni_scale, 1, GL_FALSE, (float*)&env->mvp.scale);
+
+	env->mvp.uni_local = glGetUniformLocation(env->shader_program, "local");
+	glUniformMatrix4fv(env->mvp.uni_local, 1, GL_FALSE, (float*)&env->mvp.local_transform);
+	env->mvp.uni_obj_to_world = glGetUniformLocation(env->shader_program, "obj_to_world");
+	glUniformMatrix4fv(env->mvp.uni_obj_to_world, 1, GL_FALSE, (float*)&env->mvp.obj_to_world);
 
 }
 

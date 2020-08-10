@@ -26,8 +26,16 @@ void	key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 {
 	(void)mods;
 	(void)scancode;
+	t_env		*env;
+
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GLFW_TRUE);
+	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
+	{
+		env = ft_getenv();
+		env->obj.rotating ^= 1;	
+	}
+	
 }
 
 void	scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
