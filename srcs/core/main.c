@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/18 11:36:21 by toliver           #+#    #+#             */
-/*   Updated: 2020/08/23 16:02:15 by toliver          ###   ########.fr       */
+/*   Updated: 2020/08/23 16:28:37 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,6 @@ void	ft_test(t_env *env)
         glfwSwapBuffers(env->win);
         glfwPollEvents();
     }
-
     // optional: de-allocate all resources once they've outlived their purpose:
     // ------------------------------------------------------------------------
     glDeleteVertexArrays(1, &env->vao);

@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/29 17:25:02 by toliver           #+#    #+#             */
-/*   Updated: 2020/08/23 15:54:03 by toliver          ###   ########.fr       */
+/*   Updated: 2020/08/23 16:09:31 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ void	key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 		env = ft_getenv();
 		env->obj.rotating ^= 1;	
 	}
-	if (key == GLFW_KEY_KP_SUBSTRACT && action == GLFW_PRESS)
+	if (key == GLFW_KEY_KP_SUBSTRACT && (action == GLFW_PRESS || action == GLFW_REPEAT))
 		env->obj.rotspeed = env->obj.rotspeed <= 0 ? 0 : env->obj.rotspeed - 1;
-	if (key == GLFW_KEY_KP_ADD && action == GLFW_PRESS)
+	if (key == GLFW_KEY_KP_ADD && (action == GLFW_PRESS || action == GLFW_REPEAT))
 		env->obj.rotspeed = env->obj.rotspeed == INT_MAX ? INT_MAX : env->obj.rotspeed + 1;
 }
 
