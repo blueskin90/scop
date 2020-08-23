@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/29 17:30:39 by toliver           #+#    #+#             */
-/*   Updated: 2020/07/31 07:10:56 by toliver          ###   ########.fr       */
+/*   Updated: 2020/08/23 16:05:17 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,60 +70,6 @@ int		ft_create_buffers(t_env *env)
 	return (1);
 }
 
-int		ft_init_vertex_shader(t_env *env)
-{
-	int  		success;
-	char		buf[513];
-	const char	*vertexShaderSource = "#version 330 core\n"
-    "layout (location = 0) in vec4 aPos;\n"
-	"uniform mat4 trans;\n"
-	"uniform mat4 scale;\n"
-	"uniform mat4 local;\n"
-	"uniform mat4 obj_to_world;\n"
-    "void main()\n"
-    "{\n"
-    "   gl_Position = local * scale * trans * obj_to_world * vec4(aPos.x, aPos.y, aPos.z, aPos.w);\n"
-    "}\0";
-
-	env->vertex_shader = glCreateShader(GL_VERTEX_SHADER);	
-	glShaderSource(env->vertex_shader, 1, &vertexShaderSource, NULL);
-	glCompileShader(env->vertex_shader);
-	glGetShaderiv(env->vertex_shader, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		ft_bzero(buf, 513);
-		glGetShaderInfoLog(env->vertex_shader, 512, NULL, buf);
-		ft_dprintf(2, "Couldn't Compile Vertex Shader: %s\n", buf);
-		return (0);
-	}
-	return (1);
-}
-
-int		ft_init_fragment_shader(t_env *env)
-{
-	int  		success;
-	char		buf[513];
-	const char *fragmentShaderSource = "#version 330 core\n"
-    "out vec4 FragColor;\n"
-    "void main()\n"
-    "{\n"
-    "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-    "}\n\0";
-
-	env->fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);	
-	glShaderSource(env->fragment_shader, 1, &fragmentShaderSource, NULL);
-	glCompileShader(env->fragment_shader);
-	glGetShaderiv(env->fragment_shader, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		ft_bzero(buf, 513);
-		glGetShaderInfoLog(env->fragment_shader, 512, NULL, buf);
-		ft_dprintf(2, "Couldn't Compile Fragment Shader: %s\n", buf);
-		return (0);
-	}
-	return (1);
-}
-
 int		ft_init_shader_program(t_env *env)
 {
 	int  		success;
@@ -165,74 +111,6 @@ int		ft_init_shaders(t_env *env)
 	return (1);
 }
 
-float		degtorad(float deg)
-{
-	return (deg * M_PI / 180);
-}
-
-float		radtodeg(float rad)
-{
-	return (rad * 180 / M_PI);
-}
-
-void	ft_matrix_set_identity(t_mat4 *ptr)
-{
-	ft_bzero(ptr, sizeof(t_mat4));
-	ptr->val[0][0] = 1;
-	ptr->val[1][1] = 1;
-	ptr->val[2][2] = 1;
-	ptr->val[3][3] = 1;
-}
-
-void	ft_matrix_set_tran(t_mat4 *ptr, t_vec4 tran)
-{
-	ft_bzero(ptr, sizeof(t_mat4));
-	ptr->val[0][0] = 1;
-	ptr->val[1][1] = 1;
-	ptr->val[2][2] = 1;
-	ptr->val[3][3] = 1;
-	ptr->val[3][0] = tran.x;
-	ptr->val[3][1] = tran.y;
-	ptr->val[3][2] = tran.z;
-}
-
-void	ft_matrix_set_rot(t_mat4 *mat, t_vec4 axis, float angle)
-{
-	float	sin;
-	float	cos;
-
-	angle = degtorad(angle);
-	sin = sinf(angle);
-	cos = cosf(angle);
-	ft_matrix_set_identity(mat);
-	mat->val[0][0] = cos + axis.x * axis.x * (1.0 - cos);
-	mat->val[0][1] = axis.x * axis.y * (1.0 - cos) + axis.z * sin;
-	mat->val[0][2] = axis.x * axis.z * (1.0 - cos) - axis.y * sin;
-	mat->val[1][0] = axis.x * axis.y * (1.0 - cos) - axis.z * sin;
-	mat->val[1][1] = cos + axis.y * axis.y * (1.0 - cos);
-	mat->val[1][2] = axis.y * axis.z * (1.0 - cos) + axis.x * sin;
-	mat->val[2][0] = axis.x * axis.z * (1.0 - cos) + axis.y * sin;
-	mat->val[2][1] = axis.y * axis.z * (1.0 - cos) - axis.x * sin;
-	mat->val[2][2] = cos + axis.z * axis.z * (1.0 - cos);
-}
-
-void	ft_matrix_set_scale(t_mat4 *ptr, float scale)
-{
-	ft_bzero(ptr, sizeof(t_mat4));
-	ptr->val[0][0] = scale;
-	ptr->val[1][1] = scale;
-	ptr->val[2][2] = scale;
-	ptr->val[3][3] = 1;
-}
-
-void	ft_matrix_dump(t_mat4 *ptr)
-{
-	ft_printf("[%.2f][%.2f][%.2f][%.2f]\n", ptr->val[0][0], ptr->val[0][1], ptr->val[0][2], ptr->val[0][3]);
-	ft_printf("[%.2f][%.2f][%.2f][%.2f]\n", ptr->val[1][0], ptr->val[1][1], ptr->val[1][2], ptr->val[1][3]);
-	ft_printf("[%.2f][%.2f][%.2f][%.2f]\n", ptr->val[2][0], ptr->val[2][1], ptr->val[2][2], ptr->val[2][3]);
-	ft_printf("[%.2f][%.2f][%.2f][%.2f]\n", ptr->val[3][0], ptr->val[3][1], ptr->val[3][2], ptr->val[3][3]);
-}
-
 void	ft_set_matrix(t_env *env)
 {
 	ft_matrix_set_identity(&env->mvp.trans);
@@ -240,60 +118,17 @@ void	ft_set_matrix(t_env *env)
 	ft_matrix_set_scale(&env->mvp.scale, 1);
 	ft_matrix_set_identity(&env->mvp.local_transform);
 	ft_matrix_set_identity(&env->mvp.obj_to_world);
+	ft_matrix_set_identity(&env->mvp.persp);
 
-	env->mvp.uni_trans = glGetUniformLocation(env->shader_program, "trans");
-	glUniformMatrix4fv(env->mvp.uni_trans, 1, GL_FALSE, (float*)&env->mvp.trans);
-	env->mvp.uni_scale = glGetUniformLocation(env->shader_program, "scale");
-	glUniformMatrix4fv(env->mvp.uni_scale, 1, GL_FALSE, (float*)&env->mvp.scale);
 
 	env->mvp.uni_local = glGetUniformLocation(env->shader_program, "local");
 	glUniformMatrix4fv(env->mvp.uni_local, 1, GL_FALSE, (float*)&env->mvp.local_transform);
+
 	env->mvp.uni_obj_to_world = glGetUniformLocation(env->shader_program, "obj_to_world");
 	glUniformMatrix4fv(env->mvp.uni_obj_to_world, 1, GL_FALSE, (float*)&env->mvp.obj_to_world);
 
-}
-
-t_vec4	ft_matrix_mult_vec(t_mat4 *mat, t_vec4 vec)
-{
-	float	x;
-	float	y;
-	float	z;
-
-	x = vec.x * mat->val[0][0] + vec.y * mat->val[1][0] + vec.z * mat->val[2][0] + mat->val[3][0];
-	y = vec.x * mat->val[0][1] + vec.y * mat->val[1][1] + vec.z * mat->val[2][1] + mat->val[3][1];
-	z = vec.x * mat->val[0][2] + vec.y * mat->val[1][2] + vec.z * mat->val[2][2] + mat->val[3][2];
-	return ((t_vec4){x, y, z, 1});
-}
-
-t_mat4	ft_matrix_mult_matrix(t_mat4 *a, t_mat4 *b)
-{
-	t_mat4		c;
-	int			x;
-	int			y;
-
-	y = 0;
-	while (y < 4)
-	{
-		x = 0;
-		while (x < 4)
-		{
-			c.val[y][x] = a->val[y][0] * b->val[0][x]
-				+ a->val[y][1] * b->val[1][x]
-				+ a->val[y][2] * b->val[2][x]
-				+ a->val[y][3] * b->val[3][x];
-			x++;
-		}
-		y++;
-	}
-	return (c);
-}
-
-void	ft_init_camera(t_cam *cam)
-{
-	cam->front = vec_normalize(vec_set(0, 0, -1));
-	cam->up = vec_normalize(vec_set(0, 1, 0));
-	cam->right = vec_normalize(vec_set(1, 0, 0));
-	cam->scale = 1;
+	env->mvp.uni_persp = glGetUniformLocation(env->shader_program, "persp");
+	glUniformMatrix4fv(env->mvp.uni_persp, 1, GL_FALSE, (float*)&env->mvp.persp);
 }
 
 void	ft_init_cursor(t_env *env)
@@ -302,20 +137,41 @@ void	ft_init_cursor(t_env *env)
 	env->curs.mode = NORMAL;
 }
 
+void	ft_init_obj(t_obj *obj)
+{
+	obj->zaxis = vec_set(0, 0, -1);
+	obj->yaxis = vec_set(0, 1, 0);
+	obj->xaxis = vec_set(1, 0, 0);
+	obj->rotspeed = 10;
+}
+
+void	ft_init_cam(t_cam *cam)
+{
+	cam->zaxis = vec_set(0, 0, -1);
+	cam->yaxis = vec_set(0, 1, 0);
+	cam->xaxis = vec_set(1, 0, 0);
+	cam->scale = 1;
+}
+
+void	ft_init_callbacks(t_env *env)
+{
+	glfwSetKeyCallback(env->win, key_callback);
+	glfwSetScrollCallback(env->win, scroll_callback);
+	glfwSetMouseButtonCallback(env->win, mouse_click_callback);
+}
+
 int		ft_init(t_env *env)
 {
-	(void)env;
+	ft_init_cam(&env->cam);
+	ft_init_obj(&env->obj);
 	if (!ft_init_glfw())
 		return (0);
 	if (!ft_init_window(env))
 		return (0);
-	glfwSetKeyCallback(env->win, key_callback);
-	glfwSetScrollCallback(env->win, scroll_callback);
-	glfwSetMouseButtonCallback(env->win, mouse_click_callback);
-	ft_display_infos();
+	ft_init_callbacks(env);
+//	ft_display_infos();
 	ft_init_shaders(env);
 	ft_create_buffers(env);
-	ft_init_camera(&env->cam);
 	ft_set_matrix(env);
 	ft_init_cursor(env);
 //		glEnable(GL_DEPTH_TEST); // enable depth-testing

@@ -6,7 +6,7 @@
 #    By: toliver <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/09/20 19:50:33 by toliver           #+#    #+#              #
-#    Updated: 2020/07/29 18:19:19 by toliver          ###   ########.fr        #
+#    Updated: 2020/08/23 14:27:28 by toliver          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,9 +32,14 @@ OBJS = $(addprefix objs/, $(addsuffix .o, \
 			error \
 			utils \
 			init \
-			vec \
+			shaders \
 			) \
-		)) 
+		$(addprefix maths/, \
+			vec \
+			mat \
+			utils \
+		)\
+)) 
 
 
 HEADERS = includes/scop.h \
@@ -56,6 +61,7 @@ objs/%.o: srcs/%.c
 
 objs:
 	@mkdir -p objs/core
+	@mkdir -p objs/maths
 
 clean:
 #	@	make -C ./libs/mlx clean

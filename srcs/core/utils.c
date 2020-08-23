@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/29 17:25:02 by toliver           #+#    #+#             */
-/*   Updated: 2020/07/31 05:52:23 by toliver          ###   ########.fr       */
+/*   Updated: 2020/08/23 15:54:03 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 	(void)scancode;
 	t_env		*env;
 
+	env = ft_getenv();
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GLFW_TRUE);
 	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
@@ -35,7 +36,10 @@ void	key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 		env = ft_getenv();
 		env->obj.rotating ^= 1;	
 	}
-	
+	if (key == GLFW_KEY_KP_SUBSTRACT && action == GLFW_PRESS)
+		env->obj.rotspeed = env->obj.rotspeed <= 0 ? 0 : env->obj.rotspeed - 1;
+	if (key == GLFW_KEY_KP_ADD && action == GLFW_PRESS)
+		env->obj.rotspeed = env->obj.rotspeed == INT_MAX ? INT_MAX : env->obj.rotspeed + 1;
 }
 
 void	scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
@@ -46,9 +50,16 @@ void	scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
 	(void)xoffset;
 	env = ft_getenv();
 	if (yoffset > 0)
+	{
 		env->cam.scale *= 1.1;
+		ft_matrix_set_scale(&env->mvp.scale, 1.1);
+	}
 	else
+	{
+		ft_matrix_set_scale(&env->mvp.scale, 10.0 / 11.0);
 		env->cam.scale *= (10.0 / 11.0);
+	}
+	env->mvp.obj_to_world = ft_matrix_mult_matrix(&env->mvp.obj_to_world, &env->mvp.scale);
 }
 
 void 	mouse_click_callback(GLFWwindow* window, int button, int action, int mods)

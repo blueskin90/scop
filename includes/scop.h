@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/18 11:35:10 by toliver           #+#    #+#             */
-/*   Updated: 2020/07/31 07:10:57 by toliver          ###   ########.fr       */
+/*   Updated: 2020/08/23 16:05:16 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@
 #define SCR_WIDTH 800
 #define SCR_HEIGHT 600
 #define SPEED 10
+#define GLFW_KEY_KP_SUBSTRACT 333
+#define GLFW_KEY_KP_ADD 334
 
 #define MAJOR_V 4
 #define MINOR_V 0
@@ -92,25 +94,24 @@ typedef struct	s_cam
 {
 	float		scale;
 	t_vec4		pos;
-	t_vec4		front;
-	t_vec4		up;
-	t_vec4		right;
+	t_vec4		zaxis;
+	t_vec4		yaxis;
+	t_vec4		xaxis;
 }				t_cam;
 
 typedef struct	s_mvp
 {
 	t_mat4		trans;
-	GLint		uni_trans;
 	t_mat4		rot;
-	GLint		uni_rot;
 	t_mat4		scale;
-	GLint		uni_scale;
 	GLint		uni_local;
 	t_mat4		local_transform;
 	GLint		uni_obj_to_world;
 	t_mat4		obj_to_world;
 	t_mat4		world_to_view;
 	t_mat4		view_projection;
+	t_mat4		persp;
+	GLint		uni_persp;
 }				t_mvp;
 
 typedef struct	s_obj
@@ -127,6 +128,7 @@ typedef struct	s_obj
 	unsigned int	quad_nbr;
 	unsigned int	*quad_indices;
 	int				rotating;
+	int				rotspeed;
 	t_vec4			zaxis;
 	t_vec4			yaxis;
 	t_vec4			xaxis;
@@ -232,6 +234,20 @@ void	ft_matrix_set_rot(t_mat4 *mat, t_vec4 axis, float angle);
 void	ft_matrix_set_scale(t_mat4 *ptr, float scale);
 t_vec4	ft_matrix_mult_vec(t_mat4 *mat, t_vec4 vec);
 t_mat4	ft_matrix_mult_matrix(t_mat4 *a, t_mat4 *b);
+
+/*
+** UTILS FUNCTIONS
+*/
+
+float		degtorad(float deg);
+float		radtodeg(float deg);
+
+/*
+** SHADERS FUNCTIONS
+*/
+
+int		ft_init_vertex_shader(t_env *env);
+int		ft_init_fragment_shader(t_env *env);
 
 /*
 ** INPUT FUNCTIONS
