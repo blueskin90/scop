@@ -14,7 +14,7 @@
 # define SCOP_H
 
 #include <iostream>
-#include "Obj.hpp"
 #include "Vector.hpp"
+#include "Obj.hpp"
 
 #endif
