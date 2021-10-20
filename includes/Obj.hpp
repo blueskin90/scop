@@ -1,22 +1,27 @@
 #ifndef OBJ_HPP
 #define OBJ_HPP
-
+ 
 #include <iostream>
-
-
-class Obj {
+#include <Vector.hpp>
+ 
+class Obj
+{
 	public:
+		Obj(void);
 		Obj(std::string path);
-		~Obj(void);
+		Obj(Obj const &src);
+		virtual ~Obj(void);
+		Obj&	operator=(Obj const &rhs);
 
-
-	class WrongPathException : public std::exception {
-		public:
-			virtual const char* what() const throw();
-	};
-
+		std::string getPath(void) const;
+		void	setPath(std::string path);
+	protected:
 	private:
-		std::string	_path;
+		std::string _path;
+		std::vector<Vector> _vertices;
 };
+ 
+std::ostream&	operator<<(std::ostream &output,Obj const &arg);
+ 
+#endif // OBJ_HPP
 
-#endif /* OBJ_HPP */

@@ -5,6 +5,7 @@ Vector	&Vector::operator=(Vector const &rhs)
 	this->x = rhs.x;
 	this->y = rhs.y;
 	this->z = rhs.z;
+	this->w = rhs.w;
 	return (*this);
 } 
 
@@ -68,7 +69,9 @@ float	Vector::operator [](int i) const
 		return (this->y);
 	else if (i == 2)
 		return (this->z);
-	throw std::out_of_range("max index is 2");
+	else if (i == 3)
+		return (this->w);
+	throw std::out_of_range("max index is 3");
 
 }
  
@@ -80,15 +83,21 @@ float	&Vector::operator [](int i)
 		return (this->y);
 	else if (i == 2)
 		return (this->z);
-	throw std::out_of_range("max index is 2");
+	else if (i == 3)
+		return (this->w);
+	throw std::out_of_range("max index is 3");
 }
 
  
-Vector::Vector(void): x(0), y(0), z(0)
+Vector::Vector(void): x(0), y(0), z(0), w(1)
 {
 }
  
-Vector::Vector(float x, float y, float z): x(x), y(y), z(z)
+Vector::Vector(float x, float y, float z): x(x), y(y), z(z), w(1)
+{
+}
+
+Vector::Vector(float x, float y, float z, float w): x(x), y(y), z(z), w(w)
 {
 }
 
@@ -98,6 +107,7 @@ Vector::Vector(Vector const &src)
 	this->x = src.x;
 	this->y = src.y;
 	this->z = src.z;
+	this->w = src.w;
 }
  
  
@@ -127,7 +137,7 @@ float	Vector::norm(void)
  
 std::ostream&	operator<<(std::ostream &output, Vector const &rhs)
 {
-	output << "Vector : [" << rhs.x << "][" << rhs.y << "][" << rhs.z << "]";
+	output << "Vector : [" << rhs.x << "][" << rhs.y << "][" << rhs.z << "][" << rhs.w << "]";
 	return (output);
 //redirection operator
 }

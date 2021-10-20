@@ -6,7 +6,7 @@
 #    By: toliver <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/09/20 19:50:33 by toliver           #+#    #+#              #
-#    Updated: 2021/10/17 23:32:08 by toliver          ###   ########.fr        #
+#    Updated: 2021/10/20 19:22:11 by toliver          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ OBJS = $(addprefix objs/, $(addsuffix .o, \
 			main \
 			) \
 		$(addprefix classes/, \
-			obj \
+			Obj \
 			Vector \
 		)\
 )) 
@@ -31,6 +31,7 @@ OBJS = $(addprefix objs/, $(addsuffix .o, \
 
 HEADERS = includes/scop.hpp \
 		  includes/Vector.hpp \
+		  includes/Obj.hpp
 
 all: $(NAME)
 

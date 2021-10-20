@@ -9,6 +9,7 @@ class Vector
 	public:
 		Vector(void);
 		Vector(float x, float y, float z);
+		Vector(float x, float y, float z, float w);
 		Vector(Vector const &src);
 		virtual ~Vector(void);
 
@@ -32,6 +33,7 @@ class Vector
 		float	x;
 		float	y;
 		float	z;
+		float	w;
 	protected:
 	private:
 };

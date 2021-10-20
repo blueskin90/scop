@@ -8,17 +8,20 @@ int		usage(void)
 
 int		main(int ac, char **av)
 {
-	Obj	*myObj;
-
 	if (ac != 2)
 		return (usage());
-	try	{
-		myObj = new Obj(av[1]);
-	}
-	catch (std::exception* &e){
-		std::cout << "The problem was: " << e->what() << std::endl;
-	}
+	(void)av;
 
+	Obj myObj;
+
+	myObj.setPath(av[1]);
+	std::cout << myObj << std::endl;
+
+
+
+
+
+	
 	Vector test;
 	Vector test2(10, 5, -3.5);
 
@@ -38,6 +41,5 @@ int		main(int ac, char **av)
 	std::cout << test2.normalize() << std::endl;
 	std::cout << test2.norm() << std::endl;
 
-	delete myObj;
 	return (0);
 }
