@@ -15,13 +15,19 @@ int		main(int ac, char **av)
 	Obj myObj;
 
 	myObj.setPath(av[1]);
+	try{
+		myObj.parseFile();
+	}
+	catch (std::exception &e)
+	{
+		std::cerr << e.what() << std::endl;
+	}
+
 	std::cout << myObj << std::endl;
 
 
 
-
-
-	
+/*	
 	Vector test;
 	Vector test2(10, 5, -3.5);
 
@@ -40,6 +46,6 @@ int		main(int ac, char **av)
 	std::cout << test2.norm() << std::endl;
 	std::cout << test2.normalize() << std::endl;
 	std::cout << test2.norm() << std::endl;
-
+*/
 	return (0);
 }

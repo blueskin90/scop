@@ -6,7 +6,7 @@
 #    By: toliver <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/09/20 19:50:33 by toliver           #+#    #+#              #
-#    Updated: 2021/10/20 19:22:11 by toliver          ###   ########.fr        #
+#    Updated: 2021/10/22 14:58:15 by toliver          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,12 +25,14 @@ OBJS = $(addprefix objs/, $(addsuffix .o, \
 		$(addprefix classes/, \
 			Obj \
 			Vector \
+			Vector3int \
 		)\
 )) 
 
 
 HEADERS = includes/scop.hpp \
 		  includes/Vector.hpp \
+		  includes/Vector3int.hpp \
 		  includes/Obj.hpp
 
 all: $(NAME)
