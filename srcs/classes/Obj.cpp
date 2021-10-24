@@ -44,9 +44,14 @@ const char* Obj::FileError::what() const throw()
 	return ("Something went wrong when reading the file");
 }
 
+const char* Obj::WrongVerticeIndex::what() const throw()
+{
+	return ("An incorrect vertex indice was given");
+}
+
 void	Obj::addVertex(std::string line)
 {
-	std::regex re("v\\s*[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)\\s*[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)\\s*[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)\\s*");
+	std::regex re("v\\s+[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)\\s*[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)\\s*[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)\\s*");
 	Vector v;
 
 	if (!std::regex_match(line, re))
@@ -55,9 +60,79 @@ void	Obj::addVertex(std::string line)
 	this->_vertices.push_back(v);
 }
 
+// fonction d'aide pour en dessous
+bool	isOneOf(char c, const std::string compared)
+{
+	for (unsigned long int i = 0; i < compared.size(); i++)
+		if (compared[i] == c)
+			return true;
+	return false;
+}
+
+std::vector<std::string> splitWhiteSpaces(const std::string &s, const std::string delims)
+{
+	std::string word;
+	std::vector<std::string> splitted;
+	
+	for (unsigned int i = 0; i < s.size();)
+	{
+		if (isOneOf(s[i], delims) && i < s.size())
+		{
+			while (isOneOf(s[i], delims))
+				i++;
+		}
+		else
+		{
+			word = "";
+			while (isOneOf(s[i], delims) == false && i < s.size())
+			{
+				word.push_back(s[i]);
+				i++;
+			}
+			splitted.push_back(word);
+		}
+	}
+	return(splitted);
+}
+
+std::vector<int>	getIndexesFromSplittedString(std::vector<std::string> splitted)
+{
+	std::vector<int> array;
+
+	for (unsigned long int i = 0; i < splitted.size(); i++)
+		array.push_back(std::stoi(splitted[i]));
+	return (array);
+}
+
 void	Obj::addFace(std::string line)
 {
-	std::cout << "add face: " << line << std::endl;
+	std::regex re("^f(\\s+[0-9]+){3,}");
+
+	if (!std::regex_match(line, re))
+		throw BadlyFormatedLine();
+
+	line.erase(0, 1);
+
+	std::vector<std::string>splitted = splitWhiteSpaces(line, " \t\r\v\f");
+	std::vector<int> faceIndex = getIndexesFromSplittedString(splitted);
+	for (unsigned long int i = 0; i < faceIndex.size(); i++)
+		if (faceIndex[i] < 0 || (unsigned long int)faceIndex[i] > this->_vertices.size())
+			throw WrongVerticeIndex();
+
+
+	if (faceIndex.size() == 3)
+	{
+		Vector3int v(faceIndex[0], faceIndex[1], faceIndex[2]);
+		this->_faces.push_back(v);
+	}
+	else
+		std::cout << "Je ne gere pas encore les faces a plus de 3 index" << std::endl;
+/*
+	std::cout << "face : ";
+	for (unsigned long int i = 0; i < faceIndex.size(); i++)
+		std::cout << splitted[i] << "\n";
+	std::cout << std::endl;
+*/	
 }
 
 void	Obj::parseFile(void)
@@ -97,6 +172,12 @@ const std::vector<Vector>&	Obj::getVertices(void) const
 	return this->_vertices;
 }
 
+const std::vector<Vector3int>&	Obj::getFaces(void) const
+{
+	return this->_faces;
+}
+
+
 std::ostream&	operator<<(std::ostream &output, Obj const &lhs)
 {
 	output << lhs.getPath() << std::endl;
@@ -104,5 +185,11 @@ std::ostream&	operator<<(std::ostream &output, Obj const &lhs)
 
 	for (unsigned long int i = 0; i < lhs.getVertices().size(); i++)
 		std::cout << v[i] << std::endl;
+
+	const std::vector<Vector3int> &v2 = lhs.getFaces();
+
+	for (unsigned long int i = 0; i < lhs.getFaces().size(); i++)
+		std::cout << v2[i] << std::endl;
+
 	return (output);
 }

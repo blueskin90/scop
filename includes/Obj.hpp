@@ -26,6 +26,7 @@ class Obj
 		std::string getPath(void) const;
 		void	setPath(std::string path);
 		const std::vector<Vector>&	getVertices(void) const;
+		const std::vector<Vector3int>&	getFaces(void) const;
 		void	parseFile(void);
 	protected:
 		class BadlyFormatedLine: public std::exception
@@ -38,6 +39,12 @@ class Obj
 			public:
 				virtual const char* what() const throw();
 		};
+		class WrongVerticeIndex: public std::exception
+		{
+			public:
+				virtual const char* what() const throw();
+		};
+
 	private:
 		std::string _path;
 		std::vector<Vector> _vertices;
