@@ -25,6 +25,7 @@ void	init_callbacks(t_env *env)
 {
 	glfwSetErrorCallback(error_callback);
 	glfwSetKeyCallback(env->win, key_callback);
+    //glfwSetFrameBufferSizeCallback to be notified when the size change
 }
 
 int		init_glfw(t_env *env)
