@@ -3,32 +3,11 @@
 int		usage(void)
 {
 	std::cout << "usage: ./scop obj_file" << std::endl;
-	return (1);
+	return (0);
 }
 
-int		main(int ac, char **av)
+void	vecTest(void)
 {
-	if (ac != 2)
-		return (usage());
-	(void)av;
-
-	Obj myObj;
-
-	myObj.setPath(av[1]);
-	try{
-		myObj.parseFile();
-	}
-	catch (std::exception &e)
-	{
-		std::cerr << e.what() << std::endl;
-		return (1);
-	}
-
-	std::cout << myObj << std::endl;
-
-
-
-/*	
 	Vector test;
 	Vector test2(10, 5, -3.5);
 
@@ -47,6 +26,66 @@ int		main(int ac, char **av)
 	std::cout << test2.norm() << std::endl;
 	std::cout << test2.normalize() << std::endl;
 	std::cout << test2.norm() << std::endl;
-*/
-	return (0);
+}
+
+int		parsing(t_env *env, int ac, char **av)
+{
+	if (ac != 2)
+		return (usage());
+	env->obj.setPath(av[1]);
+	try{
+		env->obj.parseFile();
+	}
+	catch (std::exception &e)
+	{
+		std::cerr << e.what() << std::endl;
+		return (0);
+	}
+	std::cout << env->obj << std::endl;
+	return (1);
+}
+
+int		main_loop(t_env *env)
+{
+   	while (!glfwWindowShouldClose(env->win))
+    {
+        /* Render here */
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        /* Swap front and back buffers */
+        glfwSwapBuffers(env->win);
+
+        /* Poll for and process events */
+        glfwPollEvents();
+    }
+	return (1);
+}
+
+int		clean_exit(t_env *env)
+{
+	(void)env;
+    glfwTerminate();
+	return (1);
+}
+
+void	display_infos(void)
+{
+	const GLubyte* renderer = glGetString(GL_RENDERER); // get renderer string
+	const GLubyte* version = glGetString(GL_VERSION); // version as a string
+	printf("Renderer: %s\n", renderer);
+	printf("OpenGL version supported %s\n", version);
+}
+
+int		main(int ac, char **av)
+{
+	t_env	env;
+
+	if (!parsing(&env, ac, av))
+		return (1);
+	if (!init(&env))
+		return (1);
+	//display_infos();
+	main_loop(&env);
+	clean_exit(&env);
+  	return (0);
 }

@@ -6,13 +6,13 @@
 #    By: toliver <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/09/20 19:50:33 by toliver           #+#    #+#              #
-#    Updated: 2021/10/22 14:58:15 by toliver          ###   ########.fr        #
+#    Updated: 2021/10/25 18:25:42 by toliver          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = scop
 
-INCLUDES = -I includes/ #-I /Users/toliver/.brew/Cellar/glfw/3.3.2/include
+INCLUDES = -I includes/ -I /Users/toliver/.brew/include/
 
 FLAGS = -Wall -Wextra -Werror -Ofast -fsanitize=address
 
@@ -21,6 +21,8 @@ FRAMEWORK_FLAGS = -framework OpenGL `pkg-config --static --libs glfw3`
 OBJS = $(addprefix objs/, $(addsuffix .o, \
 		$(addprefix core/, \
 			main \
+			callbacks \
+			init \
 			) \
 		$(addprefix classes/, \
 			Obj \
@@ -39,7 +41,7 @@ all: $(NAME)
 
 $(NAME): objs $(OBJS) $(HEADERS)
 	@printf "\033[92m\033[1:32mCompiling -------------> \033[91m$(NAME)\033[0m:\033[0m%-16s\033[32m[✔]\033[0m\n"
-	@clang++ -o $(NAME) $(FLAGS) $(LIBS) $(OBJS) $(INCLUDES)
+	@clang++ -o $(NAME) $(FLAGS) $(FRAMEWORK_FLAGS) $(LIBS) $(OBJS) $(INCLUDES)
 	
 objs/%.o: srcs/%.cpp
 	@printf  "\033[1:92mCompiling $(NAME)\033[0m %-31s\033[32m[$<]\033[0m\n" ""

@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/18 11:35:10 by toliver           #+#    #+#             */
-/*   Updated: 2021/10/17 23:12:12 by toliver          ###   ########.fr       */
+/*   Updated: 2021/10/25 18:25:05 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,5 +16,36 @@
 #include <iostream>
 #include "Vector.hpp"
 #include "Obj.hpp"
+
+#define GL_SILENCE_DEPRECATION
+#include <OpenGL/gl3.h>
+#include <GLFW/glfw3.h> // GLFW helper library
+
+#define WIDTH 800
+#define HEIGHT 600
+
+typedef struct		s_env
+{
+	Obj				obj;
+	GLFWwindow		*win;
+	int				winx;
+	int				winy;
+}					t_env;
+
+/*
+** CALLBACKS FUNCTIONS
+*/
+
+void	error_callback(int error, const char* description);
+void	key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
+
+/*
+** INIT FUNCTIONS
+*/
+
+int		init(t_env *env);
+int		init_glfw(t_env *env);
+void	init_callbacks(t_env *env);
+int		init_main_window(t_env *env);
 
 #endif
