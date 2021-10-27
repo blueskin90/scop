@@ -71,7 +71,7 @@ int		main_loop(t_env *env)
 		"#version 400\n"
 		"in vec3 vp;"
 		"void main() {"
-		"  gl_Position = vec4(vp, 1.0);"
+		"  gl_Position = vec4(vp.x, vp.y, vp.z, 1.0);"
 		"}";
 
 	const char* fragment_shader =
@@ -102,13 +102,11 @@ int		main_loop(t_env *env)
 
 	while(!glfwWindowShouldClose(env->win)) {
 		// wipe the drawing surface clear
+	   glClearColor(0.0f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glUseProgram(shader_programme);
 
 		env->obj.draw();
-//		glBindVertexArray(vao);
-		// draw points 0-3 from the currently bound VAO with current in-use shader
-//		glDrawArrays(GL_TRIANGLES, 0, 3);
 		// update other events like input handling 
 		glfwPollEvents();
 		// put the stuff we've been drawing onto the display
@@ -117,7 +115,6 @@ int		main_loop(t_env *env)
 	/*
 	   while (!glfwWindowShouldClose(env->win))
 	   {
-	   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	// Render here 
 	glClear(GL_COLOR_BUFFER_BIT);
 

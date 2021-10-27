@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/18 11:35:10 by toliver           #+#    #+#             */
-/*   Updated: 2021/10/27 19:45:06 by toliver          ###   ########.fr       */
+/*   Updated: 2021/10/27 20:35:52 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 #include <iostream>
 #include "Vector.hpp"
 #include "Obj.hpp"
+#include "Matrix.hpp"
+#include "Camera.hpp"
 
 #include <OpenGL/gl3.h>
 #include <GLFW/glfw3.h> // GLFW helper library

@@ -188,9 +188,9 @@ int		Obj::genBuffers(void)
 
 	for (unsigned long int i = 0; i < this->_faces.size(); i++)
 	{
-		this->_ebo.push_back(this->_faces[i].x);
-		this->_ebo.push_back(this->_faces[i].y);
-		this->_ebo.push_back(this->_faces[i].z);
+		this->_ebo.push_back((unsigned int)this->_faces[i].x - 1);
+		this->_ebo.push_back((unsigned int)this->_faces[i].y - 1);
+		this->_ebo.push_back((unsigned int)this->_faces[i].z - 1);
 	}
 
 	glGenVertexArrays(1, &(this->_vao_id));
