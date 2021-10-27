@@ -8,7 +8,7 @@ class Matrix
 	public:
 		Matrix();
 		Matrix(Matrix const &src);
-		virtual ~Matrix()
+		virtual ~Matrix();
 		Matrix&	operator=(Matrix const &rhs);
 	protected:
 	private:

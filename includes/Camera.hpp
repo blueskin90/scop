@@ -16,7 +16,7 @@ class Camera
 	public:
 		Camera();
 		Camera(Camera const &src);
-		virtual ~Camera()
+		virtual ~Camera();
 		Camera&	operator=(Camera const &rhs);
 	protected:
 	private:
