@@ -1,6 +1,8 @@
 #ifndef OBJ_HPP
 #define OBJ_HPP
- 
+
+# define GL_SILENCE_DEPRECATION
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -9,6 +11,9 @@
 #include <cstdio>
 #include "Vector.hpp"
 #include "Vector3int.hpp"
+
+#include <OpenGL/gl3.h>
+#include <GLFW/glfw3.h> // GLFW helper library
 
  
 class Obj
@@ -28,6 +33,10 @@ class Obj
 		const std::vector<Vector>&	getVertices(void) const;
 		const std::vector<Vector3int>&	getFaces(void) const;
 		void	parseFile(void);
+
+		int		genBuffers(void);
+		void	draw(void);
+
 	protected:
 		class BadlyFormatedLine: public std::exception
 		{
@@ -46,7 +55,13 @@ class Obj
 		};
 
 	private:
+		std::vector<float>_vao;
+		std::vector<float>_vbo;
+		std::vector<unsigned int>_ebo;
 		std::string _path;
+		GLuint		_vao_id;
+		GLuint		_vbo_id;
+		GLuint		_ebo_id;
 		std::vector<Vector> _vertices;
 		std::vector<Vector3int> _faces;
 };

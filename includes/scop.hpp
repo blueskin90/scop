@@ -6,18 +6,18 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/18 11:35:10 by toliver           #+#    #+#             */
-/*   Updated: 2021/10/25 18:25:05 by toliver          ###   ########.fr       */
+/*   Updated: 2021/10/27 19:45:06 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SCOP_H
 # define SCOP_H
 
+#define GL_SILENCE_DEPRECATION
 #include <iostream>
 #include "Vector.hpp"
 #include "Obj.hpp"
 
-#define GL_SILENCE_DEPRECATION
 #include <OpenGL/gl3.h>
 #include <GLFW/glfw3.h> // GLFW helper library
 

@@ -47,25 +47,94 @@ int		parsing(t_env *env, int ac, char **av)
 
 int		main_loop(t_env *env)
 {
-   	while (!glfwWindowShouldClose(env->win))
-    {
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT);
+	/*
+	float points[] = {
+		0.0f,  0.5f,  0.0f,
+		0.5f, -0.5f,  0.0f,
+		-0.5f, -0.5f,  0.0f
+	};
 
-        /* Swap front and back buffers */
-        glfwSwapBuffers(env->win);
+	GLuint vbo = 0;
+	glGenBuffers(1, &vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), points, GL_STATIC_DRAW);
 
-        /* Poll for and process events */
-        glfwPollEvents();
-    }
+	GLuint vao = 0;
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+*/
+	env->obj.genBuffers();
+	const char* vertex_shader =
+		"#version 400\n"
+		"in vec3 vp;"
+		"void main() {"
+		"  gl_Position = vec4(vp, 1.0);"
+		"}";
+
+	const char* fragment_shader =
+		"#version 400\n"
+		"out vec4 frag_colour;"
+		"void main() {"
+		"  frag_colour = vec4(0.5, 0.0, 0.5, 1.0);"
+		"}";
+
+	GLuint vs = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vs, 1, &vertex_shader, NULL);
+	glCompileShader(vs);
+	GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fs, 1, &fragment_shader, NULL);
+	glCompileShader(fs);
+
+	GLuint shader_programme = glCreateProgram();
+	glAttachShader(shader_programme, fs);
+	glAttachShader(shader_programme, vs);
+	glLinkProgram(shader_programme);
+
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    // render loop
+    // -----------
+	glfwSetTime(0);
+	glfwSwapInterval(1);
+
+	while(!glfwWindowShouldClose(env->win)) {
+		// wipe the drawing surface clear
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glUseProgram(shader_programme);
+
+		env->obj.draw();
+//		glBindVertexArray(vao);
+		// draw points 0-3 from the currently bound VAO with current in-use shader
+//		glDrawArrays(GL_TRIANGLES, 0, 3);
+		// update other events like input handling 
+		glfwPollEvents();
+		// put the stuff we've been drawing onto the display
+		glfwSwapBuffers(env->win);
+	}
+	/*
+	   while (!glfwWindowShouldClose(env->win))
+	   {
+	   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	// Render here 
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	// Swap front and back buffers 
+	glfwSwapBuffers(env->win);
+
+	// Poll for and process events 
+	glfwPollEvents();
+	}
+	*/
 	return (1);
 }
 
 int		clean_exit(t_env *env)
 {
 	(void)env;
-    glfwTerminate();
+	glfwTerminate();
 	return (1);
 }
 
@@ -88,5 +157,5 @@ int		main(int ac, char **av)
 	//display_infos();
 	main_loop(&env);
 	clean_exit(&env);
-  	return (0);
+	return (0);
 }
