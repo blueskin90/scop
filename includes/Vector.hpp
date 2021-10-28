@@ -18,6 +18,8 @@ class Vector
 		float	len(void);
 		float	norm(void);
 
+		Vector	opposite(void);
+
 		Vector&	operator=(Vector const &rhs);
 		Vector	operator+(Vector const &rhs) const;
 		Vector&	operator+=(Vector const &rhs);

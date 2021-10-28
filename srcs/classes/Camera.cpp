@@ -9,7 +9,7 @@ Camera	&Camera::operator=(Camera const &rhs)
 Camera::Camera(void): pos(0, 0, 0), xaxis(1, 0, 0), yaxis(0, 1, 0), zaxis(0, 0, -1) 
 {
 	this->worldToCam.init_identity();
-//constructor 
+	this->worldToCam.set_name("worldToCam");
 }
  
  
@@ -30,13 +30,27 @@ Camera::~Camera()
  
 void	Camera::move(Vector dir)
 {
-	(void)dir;
+	this->pos += dir;
+
+	this->worldToCam.init_translation(this->pos);
+	std::cout << "cam pos " << this->pos << std::endl;
+	std::cout << this->worldToCam << std::endl;
 }
 
 void	Camera::rotate(Vector axis, float angle)
 {
 	(void)axis;
 	(void)angle;
+}
+
+void	Camera::bindToProgram(GLuint program)
+{
+	this->worldToCam.bind_to_program(program);
+}
+
+void	Camera::update(void)
+{
+	this->worldToCam.use();
 }
  
 std::ostream&	operator<<(std::ostream &output, Camera const &lhs)

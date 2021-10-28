@@ -134,6 +134,12 @@ float	Vector::norm(void)
 {
 	return (this->len());
 }
+
+Vector	Vector::opposite(void)
+{
+	Vector	opp(-this->x, -this->y, -this->z);
+	return (opp);
+}
  
 std::ostream&	operator<<(std::ostream &output, Vector const &rhs)
 {

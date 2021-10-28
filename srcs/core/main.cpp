@@ -70,15 +70,17 @@ int		main_loop(t_env *env)
 	const char* vertex_shader =
 		"#version 400\n"
 		"in vec3 vp;"
+		"uniform mat4 worldToCam;"
+		"uniform mat4 persp;"
 		"void main() {"
-		"  gl_Position = vec4(vp.x, vp.y, vp.z, 1.0);"
+		"  gl_Position = persp * worldToCam * vec4(vp.x, vp.y, vp.z, 1.0);"
 		"}";
 
 	const char* fragment_shader =
 		"#version 400\n"
 		"out vec4 frag_colour;"
 		"void main() {"
-		"  frag_colour = vec4(0.5, 0.0, 0.5, 1.0);"
+		"  frag_colour = vec4(1.0, 1.0, 1.0, 1.0);"
 		"}";
 
 	GLuint vs = glCreateShader(GL_VERTEX_SHADER);
@@ -92,7 +94,14 @@ int		main_loop(t_env *env)
 	glAttachShader(shader_programme, fs);
 	glAttachShader(shader_programme, vs);
 	glLinkProgram(shader_programme);
+// penser a verif la compile du shader
+	env->cam.bindToProgram(shader_programme);
 
+	Matrix persp;
+
+	persp.init_perspective();
+	persp.set_name("persp");
+	persp.bind_to_program(shader_programme);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     // render loop
@@ -105,6 +114,8 @@ int		main_loop(t_env *env)
 	   glClearColor(0.0f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glUseProgram(shader_programme);
+		env->cam.update();
+		persp.use();
 
 		env->obj.draw();
 		// update other events like input handling 

@@ -11,7 +11,23 @@ void	key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 	(void)scancode;
 	t_env *env;
 
+	Vector	direction(0, 0, 0);
+
 	env = (t_env*)glfwGetWindowUserPointer(window);
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GLFW_TRUE);
+	if (key == GLFW_KEY_W && action == GLFW_PRESS)
+		direction += Vector(0, 0, 1);	
+	if (key == GLFW_KEY_A && action == GLFW_PRESS)
+		direction += Vector(-1, 0, 0);	
+	if (key == GLFW_KEY_S && action == GLFW_PRESS)
+		direction += Vector(0, 0, -1);	
+	if (key == GLFW_KEY_D && action == GLFW_PRESS)
+		direction += Vector(1, 0, 0);	
+	if (key == GLFW_KEY_D || GLFW_KEY_S || GLFW_KEY_A || GLFW_KEY_W)
+	{
+		direction.normalize();
+		direction *= 0.1;
+		env->cam.move(direction);
+	}
 }

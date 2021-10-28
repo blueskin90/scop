@@ -2,19 +2,17 @@
  
 Matrix	&Matrix::operator=(Matrix const &rhs)
 {
-//assignation operator
-	(void)rhs;
-	return (*this);
-}
- 
-Matrix::Matrix(): name("unnamed")
-{
 	for (int y = 0; y < 4; y++)
 	{
 		for (int x = 0; x < 4; x++)
-			this->matrix[y][x] = 0;
+			this->matrix[y][x] = rhs.matrix[y][x];
 	}
-//constructor 
+	return (*this);
+}
+ 
+Matrix::Matrix(): name("unnamed"), glId(0)
+{
+	this->init_identity();
 }
  
  
@@ -65,6 +63,18 @@ void	Matrix::set_name(std::string name)
 	this->name = name;
 }
  
+void	Matrix::init_perspective(void)
+{
+	for (int y = 0; y < 4; y++)
+	{
+		for (int x = 0; x < 4; x++)
+			this->matrix[y][x] = 0;
+	}
+	for (int i = 0; i < 4; i++)
+		this->matrix[i][i] = 1;
+}
+
+ 
 void	Matrix::init_identity(void)
 {
 	for (int y = 0; y < 4; y++)
@@ -78,12 +88,8 @@ void	Matrix::init_identity(void)
 
 void	Matrix::init_translation(Vector t)
 {
-	for (int y = 0; y < 4; y++)
-	{
-		for (int x = 0; x < 4; x++)
-			this->matrix[y][x] = 0;
-	}
-	for (int i = 0; i < 4; i++)
+	this->init_identity();
+	for (int i = 0; i < 3; i++)
 		this->matrix[3][i] = t[i];
 }
 
@@ -127,6 +133,19 @@ void	Matrix::init_scale(float scale)
 	for (int i = 0; i < 3; i++)
 		this->matrix[i][i] = scale;
 	this->matrix[3][3] = 1;
+}
+
+void	Matrix::bind_to_program(GLuint program) // penser a throw un truc si ca fail
+{
+	this->glId = glGetUniformLocation(program, this->name.c_str());
+	std::cout << this->name.c_str() << std::endl;
+	glUniformMatrix4fv(this->glId, 1, GL_FALSE, (float*)&this->matrix[0]);
+	std::cout << "Matrix bind id is : " << this->glId << std::endl;
+}
+
+void	Matrix::use(void)
+{
+	glUniformMatrix4fv(this->glId, 1, GL_FALSE, (float*)this->matrix);
 }
  
 std::ostream&	operator<<(std::ostream &output, Matrix const &lhs)

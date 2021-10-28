@@ -22,6 +22,9 @@ class Camera
 		void	move(Vector	dir);
 		void	rotate(Vector axis, float angle);
 
+		void	bindToProgram(GLuint program);
+		void	update(void);
+
 		Vector	pos;
 		Vector	xaxis;
 		Vector	yaxis;
