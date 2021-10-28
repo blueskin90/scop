@@ -2,7 +2,8 @@
  
 Camera	&Camera::operator=(Camera const &rhs)
 {
-//assignation operator
+	(void)rhs;
+	return (*this);
 }
  
 Camera::Camera()
@@ -11,9 +12,9 @@ Camera::Camera()
 }
  
  
-Camera::Camera(Camera const &src);
+Camera::Camera(Camera const &src)
 {
-//copy constructor
+	(void)src;
 }
  
  
@@ -25,6 +26,7 @@ Camera::~Camera()
  
 std::ostream&	operator<<(std::ostream &output, Camera const &lhs)
 {
-//redirection operator
+	(void)lhs;
+	return (output);
 }
 

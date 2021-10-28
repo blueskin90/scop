@@ -3,17 +3,28 @@
 Matrix	&Matrix::operator=(Matrix const &rhs)
 {
 //assignation operator
+	(void)rhs;
+	return (*this);
 }
  
-Matrix::Matrix()
+Matrix::Matrix(): name("unnamed")
 {
+	for (int y = 0; y < 4; y++)
+	{
+		for (int x = 0; x < 4; x++)
+			this->matrix[y][x] = 0;
+	}
 //constructor 
 }
  
  
-Matrix::Matrix(Matrix const &src);
+Matrix::Matrix(Matrix const &src)
 {
-//copy constructor
+	for (int y = 0; y < 4; y++)
+	{
+		for (int x = 0; x < 4; x++)
+			this->matrix[y][x] = src.matrix[y][x];
+	}
 }
  
  
@@ -21,10 +32,109 @@ Matrix::~Matrix()
 {
 //destructor
 }
+
+Matrix	Matrix::operator*(Matrix const &rhs) const
+{
+	Matrix	m;
+	for (int y = 0; y < 4; y++)
+	{
+		for (int x = 0; x < 4; x++)
+		{
+			m.matrix[y][x] = this->matrix[y][0] * rhs.matrix[0][x]
+				+ this->matrix[y][1] * rhs.matrix[1][x]
+				+ this->matrix[y][2] * rhs.matrix[2][x]
+				+ this->matrix[y][3] * rhs.matrix[3][x];
+		}
+	}
+	return (m);
+}
+
+Matrix&	Matrix::operator*=(Matrix const &rhs)
+{
+	*this = (*this) * rhs;
+	return (*this);
+}
+
+Vector	Matrix::operator*(Vector const &rhs) const
+{
+	return (rhs);	
+}
+
+void	Matrix::set_name(std::string name)
+{
+	this->name = name;
+}
  
+void	Matrix::init_identity(void)
+{
+	for (int y = 0; y < 4; y++)
+	{
+		for (int x = 0; x < 4; x++)
+			this->matrix[y][x] = 0;
+	}
+	for (int i = 0; i < 4; i++)
+		this->matrix[i][i] = 1;
+}
+
+void	Matrix::init_translation(Vector t)
+{
+	for (int y = 0; y < 4; y++)
+	{
+		for (int x = 0; x < 4; x++)
+			this->matrix[y][x] = 0;
+	}
+	for (int i = 0; i < 4; i++)
+		this->matrix[3][i] = t[i];
+}
+
+float	degToRad(float angle)
+{
+	return (angle * M_PI / 180.0);
+}
+
+float	radToDeg(float angle)
+{
+	return (angle * 180 / M_PI);
+}
+
+void	Matrix::init_rotation(Vector axis, float angle)
+{
+	float	sin;
+	float	cos;
+
+	angle = degToRad(angle);
+	sin = sinf(angle);
+	cos = cosf(angle);
+	this->init_identity();
+	this->matrix[0][0] = cos + axis.x * axis.x * (1.0 - cos);
+	this->matrix[0][1] = axis.x * axis.y * (1.0 - cos) + axis.z * sin;
+	this->matrix[0][2] = axis.x * axis.z * (1.0 - cos) - axis.y * sin;
+	this->matrix[1][0] = axis.x * axis.y * (1.0 - cos) - axis.z * sin;
+	this->matrix[1][1] = cos + axis.y * axis.y * (1.0 - cos);
+	this->matrix[1][2] = axis.y * axis.z * (1.0 - cos) + axis.x * sin;
+	this->matrix[2][0] = axis.x * axis.z * (1.0 - cos) + axis.y * sin;
+	this->matrix[2][1] = axis.y * axis.z * (1.0 - cos) - axis.x * sin;
+	this->matrix[2][2] = cos + axis.z * axis.z * (1.0 - cos);
+}
+
+void	Matrix::init_scale(float scale)
+{
+	for (int y = 0; y < 4; y++)
+	{
+		for (int x = 0; x < 4; x++)
+			this->matrix[y][x] = 0;
+	}
+	for (int i = 0; i < 3; i++)
+		this->matrix[i][i] = scale;
+	this->matrix[3][3] = 1;
+}
  
 std::ostream&	operator<<(std::ostream &output, Matrix const &lhs)
 {
-//redirection operator
+	output << std::setprecision(2) << "[" << lhs.matrix[0][0] << "][" << lhs.matrix[0][1] << "][" << lhs.matrix[0][2] << "][" << lhs.matrix[0][3] << "]" << std::endl;
+	output << std::setprecision(2) << "[" << lhs.matrix[1][0] << "][" << lhs.matrix[1][1] << "][" << lhs.matrix[1][2] << "][" << lhs.matrix[1][3] << "]" << std::endl;
+	output << std::setprecision(2) << "[" << lhs.matrix[2][0] << "][" << lhs.matrix[2][1] << "][" << lhs.matrix[2][2] << "][" << lhs.matrix[2][3] << "]" << std::endl;
+	output << std::setprecision(2) << "[" << lhs.matrix[3][0] << "][" << lhs.matrix[3][1] << "][" << lhs.matrix[3][2] << "][" << lhs.matrix[3][3] << "]" << std::endl;
+	return (output);
 }
 
