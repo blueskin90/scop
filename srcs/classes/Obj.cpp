@@ -205,7 +205,7 @@ int		Obj::genBuffers(void)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->_ebo_id);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * 3 * this->_faces.size(), &(this->_ebo[0]), GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 	glEnableVertexAttribArray(0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
