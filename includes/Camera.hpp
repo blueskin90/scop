@@ -18,6 +18,16 @@ class Camera
 		Camera(Camera const &src);
 		virtual ~Camera();
 		Camera&	operator=(Camera const &rhs);
+
+		void	move(Vector	dir);
+		void	rotate(Vector axis, float angle);
+
+		Vector	pos;
+		Vector	xaxis;
+		Vector	yaxis;
+		Vector	zaxis;
+		Matrix	worldToCam;
+
 	protected:
 	private:
 };

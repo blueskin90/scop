@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/18 11:35:10 by toliver           #+#    #+#             */
-/*   Updated: 2021/10/27 20:35:52 by toliver          ###   ########.fr       */
+/*   Updated: 2021/10/28 19:27:07 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 typedef struct		s_env
 {
 	Obj				obj;
+	Camera			cam;
 	GLFWwindow		*win;
 	int				winx;
 	int				winy;
