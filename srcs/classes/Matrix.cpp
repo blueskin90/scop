@@ -75,26 +75,21 @@ void	Matrix::set_name(std::string name)
 void	Matrix::init_perspective(void)
 {
     float fov = 90.0;
-    float near = 1;
+    float near =0;
     float far = 100.0;
 
     fov = degToRad(fov);
-    float aspect = 800.0/600.0;
-    float yscale = 1 / tanf(fov * 0.5);
-    float xscale = yscale / aspect;
+    float aspect = 600.0/800;
+    float xscale = 1 / tanf(fov * 0.5);
+    float yscale = xscale / aspect;
     this->init_identity();
 
-    (void)far;
-    (void)near;
-    (void)xscale;
-    /*
     this->matrix[0][0] = xscale;
     this->matrix[1][1] = yscale;
-    this->matrix[2][2] = -far / (far - near);
+    this->matrix[2][2] = -(far + near) / (far - near);
     this->matrix[2][3] = -1;
-    this->matrix[3][2] = -far * near / (far - near);
+    this->matrix[3][2] = 2 * far * near / (far - near);
     this->matrix[3][3] = 0;
-    */
 }
 
  
