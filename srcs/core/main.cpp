@@ -47,25 +47,6 @@ int		parsing(t_env *env, int ac, char **av)
 
 int		main_loop(t_env *env)
 {
-	/*
-	float points[] = {
-		0.0f,  0.5f,  0.0f,
-		0.5f, -0.5f,  0.0f,
-		-0.5f, -0.5f,  0.0f
-	};
-
-	GLuint vbo = 0;
-	glGenBuffers(1, &vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), points, GL_STATIC_DRAW);
-
-	GLuint vao = 0;
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-*/
 	env->obj.genBuffers();
 	const char* vertex_shader =
 		"#version 400\n"
@@ -80,7 +61,7 @@ int		main_loop(t_env *env)
 		"#version 400\n"
 		"out vec4 frag_colour;"
 		"void main() {"
-		"  frag_colour = vec4(1.0, 1.0, 1.0, 1.0);"
+		"  frag_colour = vec4(0.5, 0.5, 1.0, 1.0);"
 		"}";
 
 	GLuint vs = glCreateShader(GL_VERTEX_SHADER);
@@ -103,6 +84,8 @@ int		main_loop(t_env *env)
 	persp.set_name("persp");
 	persp.bind_to_program(shader_programme);
 
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     // render loop
     // -----------

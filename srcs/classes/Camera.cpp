@@ -43,7 +43,6 @@ void	Camera::move(Vector dir)
     tra.init_translation(realdir.opposite());
     
 	this->worldToCam = this->worldToCam * tra; // check plus tard si ca marche bien
-	std::cout << this->worldToCam << std::endl;
 }
 
 void    Camera::roll(float angle)
