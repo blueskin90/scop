@@ -135,6 +135,27 @@ void	Obj::addFace(std::string line)
 */	
 }
 
+void	Obj::center(void)
+{
+	Vector	min = this->_vertices[0];
+	Vector	max = this->_vertices[0];
+	Vector center;
+
+	for (unsigned int i = 1; i < this->_vertices.size(); i++)
+	{
+		for (int j = 0; i < 3; i++)
+			min[j] = (this->_vertices[i][j] < min[j]) ? this->_vertices[i][j] : min[j];
+		for (int j = 0; i < 3; i++)
+			max[j] = (this->_vertices[i][j] > max[j]) ? this->_vertices[i][j] : max[j];
+	}
+	center = (max - min) / 2.0;
+//	std::cout << "center = " << center << std::endl;
+	for (unsigned int i = 0; i < this->_vertices.size(); i++)
+	{
+		this->_vertices[i] -= center;
+	}	
+}
+
 void	Obj::parseFile(void)
 {
 	std::ifstream file;
@@ -160,6 +181,7 @@ void	Obj::parseFile(void)
 			std::cout << "unknown line type : " << line << std::endl;
 	}
 	file.close();
+	this->center();
 }
 
 void	Obj::setPath(std::string path)

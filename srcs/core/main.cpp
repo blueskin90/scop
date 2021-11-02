@@ -41,7 +41,7 @@ int		parsing(t_env *env, int ac, char **av)
 		std::cerr << e.what() << std::endl;
 		return (0);
 	}
-	std::cout << env->obj << std::endl;
+//	std::cout << env->obj << std::endl;
 	return (1);
 }
 

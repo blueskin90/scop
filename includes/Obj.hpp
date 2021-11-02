@@ -64,6 +64,8 @@ class Obj
 		GLuint		_ebo_id;
 		std::vector<Vector> _vertices;
 		std::vector<Vector3int> _faces;
+
+		void	center(void);
 };
  
 std::ostream&	operator<<(std::ostream &output,Obj const &arg);
