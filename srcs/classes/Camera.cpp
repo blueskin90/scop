@@ -30,17 +30,43 @@ Camera::~Camera()
  
 void	Camera::move(Vector dir)
 {
-	this->pos += dir;
+    Vector realdir(0, 0, 0);
 
-	this->worldToCam.init_translation(this->pos);
-	std::cout << "cam pos " << this->pos << std::endl;
-	std::cout << this->worldToCam << std::endl;
+    realdir += (this->xaxis * dir.x);
+    realdir += (this->yaxis * dir.y);
+    realdir += (this->zaxis * dir.z);
+
+	this->pos += realdir;
+
+    Matrix tra;
+
+    tra.init_translation(realdir.opposite());
+    
+	this->worldToCam = this->worldToCam * tra; // check plus tard si ca marche bien
+}
+
+void    Camera::roll(float angle)
+{
+    this->rotate(this->zaxis, angle);
+}
+void    Camera::pitch(float angle)
+{
+    this->rotate(this->yaxis, angle);
+}
+void    Camera::yawn(float angle)
+{
+    this->rotate(this->xaxis, angle);
 }
 
 void	Camera::rotate(Vector axis, float angle)
 {
-	(void)axis;
-	(void)angle;
+    Matrix rot;
+
+    rot.init_rotation(axis, -angle);
+	this->worldToCam = this->worldToCam * rot; // check plus tard si ca marche bien
+    this->xaxis = rot * this->xaxis;
+    this->yaxis = rot * this->yaxis;
+    this->zaxis = rot * this->zaxis;
 }
 
 void	Camera::bindToProgram(GLuint program)

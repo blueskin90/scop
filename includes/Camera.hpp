@@ -21,6 +21,9 @@ class Camera
 
 		void	move(Vector	dir);
 		void	rotate(Vector axis, float angle);
+        void    roll(float angle);
+        void    pitch(float angle);
+        void    yawn(float angle);
 
 		void	bindToProgram(GLuint program);
 		void	update(void);

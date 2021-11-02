@@ -1,4 +1,14 @@
 #include "Matrix.hpp"
+
+float	degToRad(float angle)
+{
+	return (angle * M_PI / 180.0);
+}
+
+float	radToDeg(float angle)
+{
+	return (angle * 180 / M_PI);
+}
  
 Matrix	&Matrix::operator=(Matrix const &rhs)
 {
@@ -24,7 +34,6 @@ Matrix::Matrix(Matrix const &src)
 			this->matrix[y][x] = src.matrix[y][x];
 	}
 }
- 
  
 Matrix::~Matrix()
 {
@@ -65,13 +74,22 @@ void	Matrix::set_name(std::string name)
  
 void	Matrix::init_perspective(void)
 {
-	for (int y = 0; y < 4; y++)
-	{
-		for (int x = 0; x < 4; x++)
-			this->matrix[y][x] = 0;
-	}
-	for (int i = 0; i < 4; i++)
-		this->matrix[i][i] = 1;
+    float fov = 90.0;
+    float near =0;
+    float far = 100.0;
+
+    fov = degToRad(fov);
+    float aspect = 600.0/800;
+    float xscale = 1 / tanf(fov * 0.5);
+    float yscale = xscale / aspect;
+    this->init_identity();
+
+    this->matrix[0][0] = xscale;
+    this->matrix[1][1] = yscale;
+    this->matrix[2][2] = -(far + near) / (far - near);
+    this->matrix[2][3] = -1;
+    this->matrix[3][2] = 2 * far * near / (far - near);
+    this->matrix[3][3] = 0;
 }
 
  
@@ -91,16 +109,6 @@ void	Matrix::init_translation(Vector t)
 	this->init_identity();
 	for (int i = 0; i < 3; i++)
 		this->matrix[3][i] = t[i];
-}
-
-float	degToRad(float angle)
-{
-	return (angle * M_PI / 180.0);
-}
-
-float	radToDeg(float angle)
-{
-	return (angle * 180 / M_PI);
 }
 
 void	Matrix::init_rotation(Vector axis, float angle)
