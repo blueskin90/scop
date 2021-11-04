@@ -125,8 +125,13 @@ void	Obj::addFace(std::string line)
 		Vector3int v(faceIndex[0], faceIndex[1], faceIndex[2]);
 		this->_faces.push_back(v);
 	}
+	else if (faceIndex.size() == 4)
+	{
+		this->_faces.push_back(Vector3int(faceIndex[0], faceIndex[1], faceIndex[2]));
+		this->_faces.push_back(Vector3int(faceIndex[2], faceIndex[3], faceIndex[0]));
+	}
 	else
-		std::cout << "Je ne gere pas encore les faces a plus de 3 index" << std::endl;
+		std::cout << "Je ne gere pas encore les faces a plus de 4 index" << std::endl;
 /*
 	std::cout << "face : ";
 	for (unsigned long int i = 0; i < faceIndex.size(); i++)
@@ -143,17 +148,20 @@ void	Obj::center(void)
 
 	for (unsigned int i = 1; i < this->_vertices.size(); i++)
 	{
-		for (int j = 0; i < 3; i++)
+		for (int j = 0; j < 3; j++)
 			min[j] = (this->_vertices[i][j] < min[j]) ? this->_vertices[i][j] : min[j];
-		for (int j = 0; i < 3; i++)
+		for (int j = 0; j < 3; j++)
 			max[j] = (this->_vertices[i][j] > max[j]) ? this->_vertices[i][j] : max[j];
 	}
-	center = (max - min) / 2.0;
-//	std::cout << "center = " << center << std::endl;
+	center = (max + min) / 2.0;
+	std::cout << "min = " << min << std::endl;
+	std::cout << "max = " << max << std::endl;
+	std::cout << "center = " << center << std::endl;
 	for (unsigned int i = 0; i < this->_vertices.size(); i++)
 	{
 		this->_vertices[i] -= center;
 	}	
+
 }
 
 void	Obj::parseFile(void)
