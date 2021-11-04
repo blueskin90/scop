@@ -37,6 +37,10 @@ class Obj
 
 		void	genBuffers(void);
 		void	draw(void);
+		void	update(void);
+		void	toggleRotation(void);
+
+		void	bindToProgram(GLuint program);
 
 	protected:
 		class BadlyFormatedLine: public std::exception
@@ -58,6 +62,7 @@ class Obj
 	private:
 		Model					_model;
 		std::string 			_path;
+		bool					_rotating;
 		std::vector<Vector> 	_vertices;
 		std::vector<Vector3int> _faces;
 

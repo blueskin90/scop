@@ -52,9 +52,10 @@ int		main_loop(t_env *env)
 		"#version 400\n"
 		"in vec3 vp;"
 		"uniform mat4 worldToCam;"
+		"uniform mat4 objToWorld;"
 		"uniform mat4 persp;"
 		"void main() {"
-		"  gl_Position = persp * worldToCam * vec4(vp.x, vp.y, vp.z, 1.0);"
+		"  gl_Position = persp * worldToCam * objToWorld * vec4(vp.x, vp.y, vp.z, 1.0);"
 		"}";
 
 	const char* fragment_shader =
@@ -77,6 +78,7 @@ int		main_loop(t_env *env)
 	glLinkProgram(shader_programme);
 // penser a verif la compile du shader
 	env->cam.bindToProgram(shader_programme);
+	env->obj.bindToProgram(shader_programme);
 
 	Matrix persp;
 
@@ -98,6 +100,7 @@ int		main_loop(t_env *env)
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glUseProgram(shader_programme);
 		env->cam.update();
+		env->obj.update();
 		persp.use();
 
 		env->obj.draw();

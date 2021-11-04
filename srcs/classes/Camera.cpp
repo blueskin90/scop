@@ -10,6 +10,7 @@ Camera::Camera(void): pos(0, 0, 0), xaxis(1, 0, 0), yaxis(0, 1, 0), zaxis(0, 0, 
 {
 	this->worldToCam.init_identity();
 	this->worldToCam.set_name("worldToCam");
+	this->move(Vector(0,0,-5)); // position temporaire
 }
  
  

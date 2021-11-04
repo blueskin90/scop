@@ -31,11 +31,13 @@ void	key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 		env->cam.move(direction);
 	}
     if (key == GLFW_KEY_LEFT)
-        env->cam.pitch(-1);
-    if (key == GLFW_KEY_RIGHT)
         env->cam.pitch(1);
+    if (key == GLFW_KEY_RIGHT)
+        env->cam.pitch(-1);
     if (key == GLFW_KEY_UP)
         env->cam.yawn(1);
     if (key == GLFW_KEY_DOWN)
         env->cam.yawn(-1);
+	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
+		env->obj.toggleRotation();
 }

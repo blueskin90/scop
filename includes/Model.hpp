@@ -20,8 +20,15 @@ class Model
 		virtual ~Model();
 		Model&	operator=(Model const &rhs);
 
+		void	bindToProgram(GLuint program);
 		void	genBuffers(std::vector<Vector> &vertices, std::vector<Vector3int> &faces);
 		void	draw(void);
+
+		void	move(Vector	dir);
+		void	rotate(Vector axis, float angle);
+        void    roll(float angle);
+        void    pitch(float angle);
+        void    yawn(float angle);
 
 		Vector						pos;
 

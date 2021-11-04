@@ -84,6 +84,46 @@ void	Model::draw(void)
 	glBindVertexArray(this->_vaoId);
 	glDrawElements(GL_TRIANGLES, this->_ebo.size(), GL_UNSIGNED_INT, 0);
 }
+
+ 
+void	Model::move(Vector dir)
+{
+	this->pos += dir;
+
+    Matrix tra;
+    tra.init_translation(dir);
+	this->objToWorld = this->objToWorld * tra;
+}
+
+void    Model::roll(float angle)
+{
+    this->rotate(this->zaxis, angle);
+}
+void    Model::pitch(float angle)
+{
+    this->rotate(this->yaxis, angle);
+}
+void    Model::yawn(float angle)
+{
+    this->rotate(this->xaxis, angle);
+}
+
+void	Model::rotate(Vector axis, float angle)
+{
+    Matrix rot;
+
+    rot.init_rotation(axis, angle);
+	this->objToWorld = this->objToWorld * rot; // check plus tard si ca marche bien
+    this->xaxis = rot * this->xaxis;
+    this->yaxis = rot * this->yaxis;
+    this->zaxis = rot * this->zaxis;
+}
+
+void	Model::bindToProgram(GLuint program)
+{
+	this->objToWorld.bind_to_program(program);
+}
+
  
 std::ostream&	operator<<(std::ostream &output, Model const &lhs)
 {

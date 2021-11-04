@@ -7,12 +7,12 @@ Obj	&Obj::operator=(Obj const &rhs)
 	//assignation operator
 }
 
-Obj::Obj(void): _path("Path uninitialized")
+Obj::Obj(void): _path("Path uninitialized"), _rotating(false) 
 {
 	//constructor 
 }
 
-Obj::Obj(std::string path): _path(path) 
+Obj::Obj(std::string path): _path(path), _rotating(false) 
 {
 	//constructor 
 }
@@ -208,6 +208,22 @@ void	Obj::draw(void)
 	this->_model.draw();
 }
 
+void	Obj::toggleRotation(void)
+{
+	this->_rotating ^= true;
+}
+
+void	Obj::update(void)
+{
+	if (this->_rotating == true)
+		this->_model.pitch(1);
+	this->_model.objToWorld.use();
+}
+
+void	Obj::bindToProgram(GLuint program)
+{
+	this->_model.bindToProgram(program);
+}
 
 std::ostream&	operator<<(std::ostream &output, Obj const &lhs)
 {
