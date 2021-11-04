@@ -7,12 +7,12 @@ Obj	&Obj::operator=(Obj const &rhs)
 	//assignation operator
 }
 
-Obj::Obj(void): _path("Path uninitialized"), _vao_id(0), _vbo_id(0), _ebo_id(0)
+Obj::Obj(void): _path("Path uninitialized")
 {
 	//constructor 
 }
 
-Obj::Obj(std::string path): _path(path), _vao_id(0), _vbo_id(0), _ebo_id(0) 
+Obj::Obj(std::string path): _path(path) 
 {
 	//constructor 
 }
@@ -198,48 +198,14 @@ const std::vector<Vector3int>&	Obj::getFaces(void) const
 {
 	return this->_faces;
 }
-
-int		Obj::genBuffers(void)
+void		Obj::genBuffers(void)
 {
-	for (unsigned long int i = 0; i < this->_vertices.size(); i++)
-	{
-		this->_vbo.push_back(this->_vertices[i].x);
-		this->_vbo.push_back(this->_vertices[i].y);
-		this->_vbo.push_back(this->_vertices[i].z);
-	}
-
-	for (unsigned long int i = 0; i < this->_faces.size(); i++)
-	{
-		this->_ebo.push_back((unsigned int)this->_faces[i].x - 1);
-		this->_ebo.push_back((unsigned int)this->_faces[i].y - 1);
-		this->_ebo.push_back((unsigned int)this->_faces[i].z - 1);
-	}
-
-	glGenVertexArrays(1, &(this->_vao_id));
-	glGenBuffers(1, &(this->_vbo_id));
-	glGenBuffers(1, &(this->_ebo_id));
-
-	glBindVertexArray(this->_vao_id);
-
-	glBindBuffer(GL_ARRAY_BUFFER, this->_vbo_id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * this->_vertices.size(), &(this->_vbo[0]), GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->_ebo_id);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * 3 * this->_faces.size(), &(this->_ebo[0]), GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-	glEnableVertexAttribArray(0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-	return (1);	
+	this->_model.genBuffers(this->_vertices, this->_faces);
 }
 
 void	Obj::draw(void)
 {
-	glBindVertexArray(this->_vao_id);
-	glDrawElements(GL_TRIANGLES, this->_faces.size() * 3, GL_UNSIGNED_INT, 0);
+	this->_model.draw();
 }
 
 
