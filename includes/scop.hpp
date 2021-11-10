@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/18 11:35:10 by toliver           #+#    #+#             */
-/*   Updated: 2021/10/28 19:27:07 by toliver          ###   ########.fr       */
+/*   Updated: 2021/11/10 11:59:17 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include "Obj.hpp"
 #include "Matrix.hpp"
 #include "Camera.hpp"
+#include "Mouse.hpp"
 
 #include <OpenGL/gl3.h>
 #include <GLFW/glfw3.h> // GLFW helper library
@@ -26,13 +27,23 @@
 #define WIDTH 800
 #define HEIGHT 600
 
+enum				e_mode
+{
+	NONE,
+	MOVEXZ,
+	ROTATEXY
+};
+
 typedef struct		s_env
 {
 	Obj				obj;
 	Camera			cam;
 	GLFWwindow		*win;
+	Mouse			mouse;
 	int				winx;
 	int				winy;
+
+	int				mode;
 }					t_env;
 
 /*
@@ -41,6 +52,8 @@ typedef struct		s_env
 
 void	error_callback(int error, const char* description);
 void	key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
+void	mouse_move_callback(GLFWwindow *window, double xpos, double ypos);
+void	mouse_button_callback(GLFWwindow *win, int button, int action, int mods);
 
 /*
 ** INIT FUNCTIONS

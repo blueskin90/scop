@@ -6,7 +6,7 @@
 #    By: toliver <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/09/20 19:50:33 by toliver           #+#    #+#              #
-#    Updated: 2021/10/28 18:13:24 by toliver          ###   ########.fr        #
+#    Updated: 2021/11/10 10:49:58 by toliver          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,6 +31,7 @@ OBJS = $(addprefix objs/, $(addsuffix .o, \
 			Matrix \
 			Model \
 			Camera \
+			Mouse \
 		)\
 )) 
 
@@ -42,6 +43,7 @@ HEADERS = includes/scop.hpp \
 		  includes/Camera.hpp \
 		  includes/Matrix.hpp \
 		  includes/Model.hpp \
+		  includes/Mouse.hpp \
 
 all: $(NAME)
 

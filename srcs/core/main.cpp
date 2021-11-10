@@ -104,6 +104,7 @@ int		main_loop(t_env *env)
 		persp.use();
 
 		env->obj.draw();
+		env->mouse.update();
 		// update other events like input handling 
 		glfwPollEvents();
 		// put the stuff we've been drawing onto the display

@@ -25,6 +25,8 @@ void	init_callbacks(t_env *env)
 {
 	glfwSetErrorCallback(error_callback);
 	glfwSetKeyCallback(env->win, key_callback);
+	glfwSetCursorPosCallback(env->win, mouse_move_callback);
+	glfwSetMouseButtonCallback(env->win, mouse_button_callback);
     //glfwSetFrameBufferSizeCallback to be notified when the size change
 }
 
@@ -46,5 +48,6 @@ int		init(t_env *env)
 	if (!init_main_window(env)) // create windows before assigning callbacks 
 		return (0);
 	init_callbacks(env);
+	env->mode = NONE;
 	return (1);
 }

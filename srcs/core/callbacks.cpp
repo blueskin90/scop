@@ -5,6 +5,22 @@ void error_callback(int error, const char* description)
 	std::cerr << "Error " << error << ": " << description << std::endl;
 }
 
+void	mouse_move_callback(GLFWwindow *win, double xpos, double ypos)
+{
+	t_env	*env;
+
+	env = (t_env*)glfwGetWindowUserPointer(win);
+	env->mouse.cursor_position_callback(win, xpos, ypos);
+}
+
+void	mouse_button_callback(GLFWwindow *win, int button, int action, int mods)
+{
+	t_env	*env;
+
+	env = (t_env*)glfwGetWindowUserPointer(win);
+	env->mouse.button_pressed_callback(win, button, action, mods);
+}
+
 void	key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
 	(void)mods;
