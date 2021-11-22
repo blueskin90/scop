@@ -6,13 +6,13 @@
 #    By: toliver <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/09/20 19:50:33 by toliver           #+#    #+#              #
-#    Updated: 2021/11/10 10:49:58 by toliver          ###   ########.fr        #
+#    Updated: 2021/11/22 20:56:59 by toliver          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = scop
 
-INCLUDES = -I includes/ -I /Users/toliver/.brew/include/
+INCLUDES = -I includes/ -I /Users/toliver/homebrew/include/
 
 FLAGS = -Wall -Wextra -Werror -Ofast -fsanitize=address
 
@@ -32,6 +32,7 @@ OBJS = $(addprefix objs/, $(addsuffix .o, \
 			Model \
 			Camera \
 			Mouse \
+			Time \
 		)\
 )) 
 
@@ -44,6 +45,7 @@ HEADERS = includes/scop.hpp \
 		  includes/Matrix.hpp \
 		  includes/Model.hpp \
 		  includes/Mouse.hpp \
+		  includes/Time.hpp \
 
 all: $(NAME)
 
