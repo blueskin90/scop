@@ -42,6 +42,7 @@ class Obj
 
 		void	bindToProgram(GLuint program);
 
+		Model					_model;
 	protected:
 		class BadlyFormatedLine: public std::exception
 		{
@@ -60,7 +61,6 @@ class Obj
 		};
 
 	private:
-		Model					_model;
 		std::string 			_path;
 		bool					_rotating;
 		std::vector<Vector> 	_vertices;

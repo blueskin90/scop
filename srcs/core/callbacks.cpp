@@ -11,6 +11,13 @@ void	mouse_move_callback(GLFWwindow *win, double xpos, double ypos)
 
 	env = (t_env*)glfwGetWindowUserPointer(win);
 	env->mouse.cursor_position_callback(win, xpos, ypos);
+    if (env->mode == MOVEXZ)
+        env->obj._model.move(Vector(env->mouse.diff.x, 0, env->mouse.diff.y));
+    if (env->mode == ROTATEXY)
+    {
+        env->obj._model.rotate(env->cam.xaxis, env->mouse.diff.x);
+        env->obj._model.rotate(env->cam.yaxis, env->mouse.diff.y);
+    }
 }
 
 void	mouse_button_callback(GLFWwindow *win, int button, int action, int mods)
@@ -19,6 +26,21 @@ void	mouse_button_callback(GLFWwindow *win, int button, int action, int mods)
 
 	env = (t_env*)glfwGetWindowUserPointer(win);
 	env->mouse.button_pressed_callback(win, button, action, mods);
+    if (env->mode == NONE && action == GLFW_PRESS)
+    {
+        if (button == GLFW_MOUSE_BUTTON_LEFT)
+            env->mode = ROTATEXY;
+        else if (button == GLFW_MOUSE_BUTTON_RIGHT)
+            env->mode = MOVEXZ;
+
+    }
+    else if (action == GLFW_RELEASE)
+    {
+        if (env->mode == ROTATEXY && button == GLFW_MOUSE_BUTTON_LEFT)
+            env->mode = NONE;
+        else if (env->mode == MOVEXZ && button == GLFW_MOUSE_BUTTON_MIDDLE)
+            env->mode = NONE;
+    }
 }
 
 void	key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
