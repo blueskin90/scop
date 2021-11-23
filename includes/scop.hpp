@@ -20,6 +20,7 @@
 #include "Matrix.hpp"
 #include "Camera.hpp"
 #include "Mouse.hpp"
+#include "Time.hpp"
 
 #include <OpenGL/gl3.h>
 #include <GLFW/glfw3.h> // GLFW helper library
@@ -44,6 +45,7 @@ typedef struct		s_env
 	int				winy;
 
 	int				mode;
+    Time            time;
 }					t_env;
 
 /*

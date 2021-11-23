@@ -114,7 +114,7 @@ void	Model::rotate(Vector axis, float angle)
 
     rot.init_rotation(axis, angle);
 	this->objToWorld = this->objToWorld * rot; // check plus tard si ca marche bien
-    this->xaxis = rot * this->xaxis;
+    this->xaxis = rot * this->xaxis; // les axes ne changent pas
     this->yaxis = rot * this->yaxis;
     this->zaxis = rot * this->zaxis;
 }

@@ -99,6 +99,7 @@ int		main_loop(t_env *env)
 	   glClearColor(0.0f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glUseProgram(shader_programme);
+        env->time.update();
 		env->cam.update();
 		env->obj.update();
 		persp.use();

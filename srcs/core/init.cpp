@@ -49,5 +49,6 @@ int		init(t_env *env)
 		return (0);
 	init_callbacks(env);
 	env->mode = NONE;
+    env->time.init();
 	return (1);
 }
