@@ -64,7 +64,18 @@ Matrix&	Matrix::operator*=(Matrix const &rhs)
 
 Vector	Matrix::operator*(Vector const &rhs) const
 {
-	return (rhs);	
+	Vector		c;
+
+	c.x = this->matrix[0][0] * rhs.x + this->matrix[0][1] * rhs.y + this->matrix[0][2] * rhs.z
+		+ this->matrix[0][3] * rhs.w;
+	c.y = this->matrix[1][0] * rhs.x + this->matrix[1][1] * rhs.y + this->matrix[1][2] * rhs.z
+		+ this->matrix[1][3] * rhs.w;
+	c.z = this->matrix[2][0] * rhs.x + this->matrix[2][1] * rhs.y + this->matrix[2][2] * rhs.z
+		+ this->matrix[2][3] * rhs.w;
+	c.w = this->matrix[3][0] * rhs.x + this->matrix[3][1] * rhs.y + this->matrix[3][2] * rhs.z
+		+ this->matrix[3][3] * rhs.w;
+	return (c);	
+	// a l'air de marcher
 }
 
 void	Matrix::set_name(std::string name)
@@ -148,7 +159,7 @@ void	Matrix::bind_to_program(GLuint program) // penser a throw un truc si ca fai
 	this->glId = glGetUniformLocation(program, this->name.c_str());
 	std::cout << this->name.c_str() << std::endl;
 	glUniformMatrix4fv(this->glId, 1, GL_FALSE, (float*)&this->matrix[0]);
-	std::cout << "Matrix bind id is : " << this->glId << std::endl;
+	std::cout << "Matrix rhs.nd id is : " << this->glId << std::endl;
 }
 
 void	Matrix::use(void)

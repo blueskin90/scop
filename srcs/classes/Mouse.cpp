@@ -73,7 +73,7 @@ void	Mouse::cursor_position_callback(GLFWwindow *win, double xpos, double ypos)
 	this->diff = Vector(xpos, ypos, 0) - this->pos;
 	this->pos.x = xpos;
 	this->pos.y = ypos;
-	std::cout << *this << std::endl;
+//	std::cout << *this << std::endl;
 }
 
 void	Mouse::button_pressed_callback(GLFWwindow* window, int button, int action, int mods)
@@ -95,10 +95,30 @@ void	Mouse::button_pressed_callback(GLFWwindow* window, int button, int action, 
 	}
 	else if (button == GLFW_MOUSE_BUTTON_RIGHT)
 	{
+		if (action == GLFW_PRESS)
+		{
+			this->button[1].is_pressed = true;
+			this->button[1].was_pressed = true;
+		}
+		else if (action == GLFW_RELEASE)
+		{
+			this->button[1].is_pressed = false;
+			this->button[1].was_pressed = false;
+		}
 
 	}
 	else if (button == GLFW_MOUSE_BUTTON_MIDDLE)
 	{
+		if (action == GLFW_PRESS)
+		{
+			this->button[2].is_pressed = true;
+			this->button[2].was_pressed = true;
+		}
+		else if (action == GLFW_RELEASE)
+		{
+			this->button[2].is_pressed = false;
+			this->button[2].was_pressed = false;
+		}
 
 	}	
 }

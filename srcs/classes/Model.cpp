@@ -111,12 +111,25 @@ void    Model::yawn(float angle)
 void	Model::rotate(Vector axis, float angle)
 {
     Matrix rot;
+	Vector pos;
+
+	pos = this->pos;	
+	this->move(this->pos.opposite());
+	axis.normalize();
+
+
+    rot.init_rotation(axis, -angle);
+
+    this->xaxis = rot * this->xaxis; // les axes ne changent pas komifo
+	this->xaxis.normalize();
+    this->yaxis = rot * this->yaxis;
+	this->yaxis.normalize();
+    this->zaxis = rot * this->zaxis;
+	this->zaxis.normalize();
 
     rot.init_rotation(axis, angle);
 	this->objToWorld = this->objToWorld * rot; // check plus tard si ca marche bien
-    this->xaxis = rot * this->xaxis; // les axes ne changent pas
-    this->yaxis = rot * this->yaxis;
-    this->zaxis = rot * this->zaxis;
+	this->move(pos);
 }
 
 void	Model::bindToProgram(GLuint program)
