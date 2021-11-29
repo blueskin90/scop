@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/18 11:35:10 by toliver           #+#    #+#             */
-/*   Updated: 2021/11/29 18:09:22 by toliver          ###   ########.fr       */
+/*   Updated: 2021/11/29 18:33:28 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #include "Camera.hpp"
 #include "Mouse.hpp"
 #include "Time.hpp"
+#include "Shader.hpp"
 
 #include <OpenGL/gl3.h>
 #include <GLFW/glfw3.h> // GLFW helper library
