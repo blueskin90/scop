@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/18 11:35:10 by toliver           #+#    #+#             */
-/*   Updated: 2021/11/10 11:59:17 by toliver          ###   ########.fr       */
+/*   Updated: 2021/11/29 17:24:05 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,9 @@ enum				e_mode
 {
 	NONE,
 	MOVEXZ,
-	ROTATEXY
+	MOVEXY, // new
+	ROTATEXY,
+	ROTATEXZ // new
 };
 
 typedef struct		s_env

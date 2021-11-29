@@ -18,6 +18,14 @@ void	mouse_move_callback(GLFWwindow *win, double xpos, double ypos)
         env->obj._model.rotate(env->cam.xaxis, env->mouse.diff.y);
         env->obj._model.rotate(env->cam.yaxis, env->mouse.diff.x);
     }
+	if (env->mode == MOVEXY)
+        env->obj._model.move(Vector(env->mouse.diff.x, -env->mouse.diff.y, 0) * env->time.deltaTime);
+    if (env->mode == ROTATEXZ)
+    {
+        env->obj._model.rotate(env->cam.zaxis, env->mouse.diff.x);
+        env->obj._model.rotate(env->cam.xaxis, env->mouse.diff.y);
+    }
+
 }
 
 void	mouse_button_callback(GLFWwindow *win, int button, int action, int mods)
@@ -26,19 +34,20 @@ void	mouse_button_callback(GLFWwindow *win, int button, int action, int mods)
 
 	env = (t_env*)glfwGetWindowUserPointer(win);
 	env->mouse.button_pressed_callback(win, button, action, mods);
+	std::cout << "key : " << button << " action: " << action << " mods: " << mods << std::endl;
     if (env->mode == NONE && action == GLFW_PRESS)
     {
         if (button == GLFW_MOUSE_BUTTON_LEFT)
-            env->mode = ROTATEXY;
+            env->mode = (mods == 2) ? ROTATEXZ : ROTATEXY; // mods == 2 == ctrl
         else if (button == GLFW_MOUSE_BUTTON_RIGHT)
-            env->mode = MOVEXZ;
+            env->mode = (mods == 2) ? MOVEXY : MOVEXZ;
 
     }
     else if (action == GLFW_RELEASE)
     {
-        if (env->mode == ROTATEXY && button == GLFW_MOUSE_BUTTON_LEFT)
+        if ((env->mode == ROTATEXY || env->mode == ROTATEXZ) && button == GLFW_MOUSE_BUTTON_LEFT)
             env->mode = NONE;
-        else if (env->mode == MOVEXZ && button == GLFW_MOUSE_BUTTON_RIGHT)
+        else if ((env->mode == MOVEXZ || env->mode == MOVEXY) && button == GLFW_MOUSE_BUTTON_RIGHT)
             env->mode = NONE;
     }
 }
@@ -52,6 +61,7 @@ void	key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 	Vector	direction(0, 0, 0);
 
 	env = (t_env*)glfwGetWindowUserPointer(window);
+	//std::cout << "key : " << key << " scancode: " << scancode << " action: " << action << " mods: " << mods << std::endl;
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GLFW_TRUE);
 	if (key == GLFW_KEY_W && action == GLFW_PRESS)
@@ -78,4 +88,21 @@ void	key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
         env->cam.yawn(-1);
 	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
 		env->obj.toggleRotation();
+	if (key == GLFW_KEY_LEFT_CONTROL)
+	{
+		if (action == GLFW_PRESS)
+		{
+			if (env->mode == ROTATEXY)
+				env->mode = ROTATEXZ; // new
+			else if (env->mode == MOVEXZ)
+				env->mode = MOVEXY;
+		}
+		else if (action == GLFW_RELEASE)
+		{
+			if (env->mode == ROTATEXZ)
+				env->mode = ROTATEXY; // new
+			else if (env->mode == MOVEXY)
+				env->mode = MOVEXZ;
+		}
+	}
 }
