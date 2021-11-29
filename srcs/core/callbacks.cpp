@@ -25,7 +25,16 @@ void	mouse_move_callback(GLFWwindow *win, double xpos, double ypos)
         env->obj._model.rotate(env->cam.zaxis, env->mouse.diff.x);
         env->obj._model.rotate(env->cam.xaxis, env->mouse.diff.y);
     }
-
+    if (env->mode == ROTATEXYSELF)
+    {
+        env->obj._model.rotate(env->obj._model.xaxis, env->mouse.diff.y);
+        env->obj._model.rotate(env->obj._model.yaxis, env->mouse.diff.x);
+    }
+    if (env->mode == ROTATEXZSELF)
+    {
+        env->obj._model.rotate(env->cam.zaxis, env->mouse.diff.x);
+        env->obj._model.rotate(env->cam.xaxis, env->mouse.diff.y);
+    }
 }
 
 void	mouse_button_callback(GLFWwindow *win, int button, int action, int mods)
@@ -38,9 +47,11 @@ void	mouse_button_callback(GLFWwindow *win, int button, int action, int mods)
     if (env->mode == NONE && action == GLFW_PRESS)
     {
         if (button == GLFW_MOUSE_BUTTON_LEFT)
-            env->mode = (mods == 2) ? ROTATEXZ : ROTATEXY; // mods == 2 == ctrl
+            env->mode = (mods & GLFW_MOD_CONTROL) ? ROTATEXZ : ROTATEXY; // mods == 2 == ctrl
         else if (button == GLFW_MOUSE_BUTTON_RIGHT)
-            env->mode = (mods == 2) ? MOVEXY : MOVEXZ;
+            env->mode = (mods & GLFW_MOD_CONTROL ) ? MOVEXY : MOVEXZ;
+		else if (button == GLFW_MOUSE_BUTTON_MIDDLE)
+			env->mode = (mods & GLFW_MOD_CONTROL ) ? ROTATEXZSELF : ROTATEXYSELF;
 
     }
     else if (action == GLFW_RELEASE)
@@ -49,6 +60,9 @@ void	mouse_button_callback(GLFWwindow *win, int button, int action, int mods)
             env->mode = NONE;
         else if ((env->mode == MOVEXZ || env->mode == MOVEXY) && button == GLFW_MOUSE_BUTTON_RIGHT)
             env->mode = NONE;
+        else if ((env->mode == ROTATEXYSELF || env->mode == ROTATEXZSELF) && button == GLFW_MOUSE_BUTTON_MIDDLE)
+            env->mode = NONE;
+
     }
 }
 
@@ -93,16 +107,21 @@ void	key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 		if (action == GLFW_PRESS)
 		{
 			if (env->mode == ROTATEXY)
-				env->mode = ROTATEXZ; // new
+				env->mode = ROTATEXZ;
 			else if (env->mode == MOVEXZ)
 				env->mode = MOVEXY;
+			else if (env->mode == ROTATEXYSELF)
+				env->mode = ROTATEXZSELF;
 		}
 		else if (action == GLFW_RELEASE)
 		{
 			if (env->mode == ROTATEXZ)
-				env->mode = ROTATEXY; // new
+				env->mode = ROTATEXY;
 			else if (env->mode == MOVEXY)
 				env->mode = MOVEXZ;
+			else if (env->mode == ROTATEXYSELF)
+				env->mode = ROTATEXZSELF;
+
 		}
 	}
 }
