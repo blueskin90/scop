@@ -86,8 +86,8 @@ void	Matrix::set_name(std::string name)
 void	Matrix::init_perspective(void)
 {
     float fov = 90.0;
-    float near =0;
-    float far = 100.0;
+    float near =0;// soucis si on change ca
+    float far = 3.0;
 
     fov = degToRad(fov);
     float aspect = 600.0/800;

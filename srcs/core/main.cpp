@@ -48,33 +48,17 @@ int		parsing(t_env *env, int ac, char **av)
 int		main_loop(t_env *env)
 {
 	env->obj.genBuffers();
-	const char* vertex_shader =
-		"#version 400\n"
-		"in vec3 vp;"
-		"uniform mat4 worldToCam;"
-		"uniform mat4 objToWorld;"
-		"uniform mat4 persp;"
-		"void main() {"
-		"  gl_Position = persp * worldToCam * objToWorld * vec4(vp.x, vp.y, vp.z, 1.0);"
-		"}";
+	
+    Shader vertex("/Users/blueskin/Projets/scop/srcs/shaders/vertex.glsl");
+    Shader fragment("/Users/blueskin/Projets/scop/srcs/shaders/fragment.glsl");
 
-	const char* fragment_shader =
-		"#version 400\n"
-		"out vec4 frag_colour;"
-		"void main() {"
-		"  frag_colour = vec4(0.5, 0.5, 1.0, 1.0);"
-		"}";
-
-	GLuint vs = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vs, 1, &vertex_shader, NULL);
-	glCompileShader(vs);
-	GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fs, 1, &fragment_shader, NULL);
-	glCompileShader(fs);
-
+    vertex.compile(GL_VERTEX_SHADER);
+    fragment.compile(GL_FRAGMENT_SHADER);
 	GLuint shader_programme = glCreateProgram();
-	glAttachShader(shader_programme, fs);
-	glAttachShader(shader_programme, vs);
+
+    glAttachShader(shader_programme, vertex.id);
+    glAttachShader(shader_programme, fragment.id);
+
 	glLinkProgram(shader_programme);
 // penser a verif la compile du shader
 	env->cam.bindToProgram(shader_programme);
@@ -86,9 +70,11 @@ int		main_loop(t_env *env)
 	persp.set_name("persp");
 	persp.bind_to_program(shader_programme);
 
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  //  glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+  //  glCullFace(GL_BACK);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     // render loop
     // -----------
 	glfwSetTime(0);
