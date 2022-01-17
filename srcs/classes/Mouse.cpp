@@ -121,6 +121,8 @@ void	Mouse::button_pressed_callback(GLFWwindow* window, int button, int action, 
 		}
 
 	}	
+	else
+		std::cout << "Unknown button was pressed :" << button << std::endl;
 }
 
 

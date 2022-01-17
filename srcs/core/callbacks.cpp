@@ -43,7 +43,7 @@ void	mouse_button_callback(GLFWwindow *win, int button, int action, int mods)
 
 	env = (t_env*)glfwGetWindowUserPointer(win);
 	env->mouse.button_pressed_callback(win, button, action, mods);
-	std::cout << "key : " << button << " action: " << action << " mods: " << mods << std::endl;
+//	std::cout << "key : " << button << " action: " << action << " mods: " << mods << std::endl;
     if (env->mode == NONE && action == GLFW_PRESS)
     {
         if (button == GLFW_MOUSE_BUTTON_LEFT)
@@ -78,13 +78,13 @@ void	key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 	//std::cout << "key : " << key << " scancode: " << scancode << " action: " << action << " mods: " << mods << std::endl;
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GLFW_TRUE);
-	if (key == GLFW_KEY_W && action == GLFW_PRESS)
+	if (key == GLFW_KEY_W && (action == GLFW_PRESS || action == GLFW_REPEAT))
 		direction += Vector(0, 0, 1);	
-	if (key == GLFW_KEY_A && action == GLFW_PRESS)
+	if (key == GLFW_KEY_A && (action == GLFW_PRESS || action == GLFW_REPEAT))
 		direction += Vector(-1, 0, 0);	
-	if (key == GLFW_KEY_S && action == GLFW_PRESS)
+	if (key == GLFW_KEY_S && (action == GLFW_PRESS || action == GLFW_REPEAT))
 		direction += Vector(0, 0, -1);	
-	if (key == GLFW_KEY_D && action == GLFW_PRESS)
+	if (key == GLFW_KEY_D && (action == GLFW_PRESS || action == GLFW_REPEAT))
 		direction += Vector(1, 0, 0);	
 	if (key == GLFW_KEY_D || GLFW_KEY_S || GLFW_KEY_A || GLFW_KEY_W)
 	{
