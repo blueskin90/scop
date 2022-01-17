@@ -5,11 +5,9 @@
 #include <iostream>
 #include "Vector.hpp"
 #include <iomanip>
-#include <OpenGL/gl3.h>
-#include <GLFW/glfw3.h>
-
 #define _USE_MATH_DEFINES 
 #include <math.h>
+#include "glincludes.hpp"
 
 class Matrix
 {

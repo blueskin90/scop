@@ -8,8 +8,7 @@
 #include "Vector3int.hpp"
 #include "Matrix.hpp"
 
-#include <OpenGL/gl3.h>
-#include <GLFW/glfw3.h>
+#include "glincludes.hpp"
 
  
 class Model

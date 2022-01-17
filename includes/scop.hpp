@@ -6,7 +6,7 @@
 /*   By: toliver <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/18 11:35:10 by toliver           #+#    #+#             */
-/*   Updated: 2021/11/29 18:33:28 by toliver          ###   ########.fr       */
+/*   Updated: 2022/01/17 11:15:03 by toliver          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define SCOP_H
 
 #define GL_SILENCE_DEPRECATION
+#include "glincludes.hpp"
 #include <iostream>
 #include "Vector.hpp"
 #include "Obj.hpp"
@@ -23,8 +24,6 @@
 #include "Time.hpp"
 #include "Shader.hpp"
 
-#include <OpenGL/gl3.h>
-#include <GLFW/glfw3.h> // GLFW helper library
 
 #define WIDTH 800
 #define HEIGHT 600

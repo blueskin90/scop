@@ -102,8 +102,8 @@ int		main_loop(t_env *env)
         env->time.update();
 		env->cam.update();
 		env->obj.update();
-		persp.use();
 
+		persp.use();
 		env->obj.draw();
 		env->mouse.update();
 		// update other events like input handling 

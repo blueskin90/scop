@@ -8,8 +8,7 @@
 
 #include <vector>
 
-#include <OpenGL/gl3.h>
-#include <GLFW/glfw3.h> // GLFW helper library
+#include "glincludes.hpp"
 
 #define LEFT_MOUSE_BUTTON 0
 #define RIGHT_MOUSE_BUTTON 1

@@ -6,17 +6,28 @@
 #    By: toliver <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/09/20 19:50:33 by toliver           #+#    #+#              #
-#    Updated: 2021/11/29 18:38:10 by toliver          ###   ########.fr        #
+#    Updated: 2022/01/17 11:27:24 by toliver          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = scop
 
-INCLUDES = -I includes/ -I /Users/toliver/homebrew/include/
+INCLUDES = -I ./includes/ -I /Users/toliver/homebrew/include/ -I ~/.linuxbrew/include/ 
 
-FLAGS = -Wall -Wextra -Werror -Ofast -fsanitize=address
+FLAGS = -Wall -Wextra -Werror -Ofast -fsanitize=address 
+
+
+ifeq ($(shell uname), Linux)
+
+FRAMEWORK_FLAGS = -lm -lGL `pkg-config --static --libs glfw3`
+
+endif
+
+ifeq ($(shell uname), Darwin)
 
 FRAMEWORK_FLAGS = -framework OpenGL `pkg-config --static --libs glfw3`
+
+endif
 
 OBJS = $(addprefix objs/, $(addsuffix .o, \
 		$(addprefix core/, \
@@ -48,12 +59,13 @@ HEADERS = includes/scop.hpp \
 		  includes/Mouse.hpp \
 		  includes/Time.hpp \
 		  includes/Shader.hpp \
+		  includes/glincludes.hpp \
 
 all: $(NAME)
 
 $(NAME): objs $(OBJS) $(HEADERS)
 	@printf "\033[92m\033[1:32mCompiling -------------> \033[91m$(NAME)\033[0m:\033[0m%-16s\033[32m[✔]\033[0m\n"
-	@clang++ -o $(NAME) $(FLAGS) $(FRAMEWORK_FLAGS) $(LIBS) $(OBJS) $(INCLUDES)
+	clang++ -o $(NAME) $(FLAGS) $(FRAMEWORK_FLAGS) $(LIBS) $(OBJS) $(INCLUDES)
 	
 objs/%.o: srcs/%.cpp
 	@printf  "\033[1:92mCompiling $(NAME)\033[0m %-31s\033[32m[$<]\033[0m\n" ""

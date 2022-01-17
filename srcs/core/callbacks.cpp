@@ -99,7 +99,7 @@ void	key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
     if (key == GLFW_KEY_UP)
         env->cam.yawn(1);
     if (key == GLFW_KEY_DOWN)
-        env->cam.yawn(-1);
+		env->cam.yawn(-1);
 	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
 		env->obj.toggleRotation();
 	if (key == GLFW_KEY_LEFT_CONTROL)

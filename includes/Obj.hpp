@@ -13,8 +13,8 @@
 #include "Vector3int.hpp"
 #include "Model.hpp"
 
-#include <OpenGL/gl3.h>
-#include <GLFW/glfw3.h> // GLFW helper library
+
+#include "glincludes.hpp"
 
  
 class Obj
