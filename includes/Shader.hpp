@@ -16,15 +16,16 @@
 #ifdef __linux__
 
 #define VERTEX_SHADER_PATH "/mnt/nfs/homes/toliver/sgoinfre/scop/srcs/shaders/vertex.glsl"
+#define GEOMETRY_SHADER_PATH "/mnt/nfs/homes/toliver/sgoinfre/scop/srcs/shaders/geometry.glsl"
 #define FRAGMENT_SHADER_PATH "/mnt/nfs/homes/toliver/sgoinfre/scop/srcs/shaders/fragment.glsl"
 
 #endif
 
 #ifdef __APPLE__
 
-#define VERTEX_SHADER_PATH "/Users/blueskin/Projets/scop/srcs/shaders/vertex.glsl"
-
-#define FRAGMENT_SHADER_PATH "/Users/blueskin/Projets/scop/srcs/shaders/fragment.glsl"
+#define VERTEX_SHADER_PATH "/sgoinfre/goinfre/Perso/toliver/scop/srcs/shaders/vertex.glsl"
+#define GEOMETRY_SHADER_PATH "/sgoinfre/goinfre/Perso/toliver/scop/srcs/shaders/geometry.glsl"
+#define FRAGMENT_SHADER_PATH "/sgoinfre/goinfre/Perso/toliver/scop/srcs/shaders/fragment.glsl"
 
 #endif 
 

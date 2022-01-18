@@ -51,18 +51,21 @@ int		main_loop(t_env *env)
 
 	Shader vertexShader;
 	Shader fragmentShader;
+	Shader geometryShader;
 
 	vertexShader.setPath(VERTEX_SHADER_PATH);
 	fragmentShader.setPath(FRAGMENT_SHADER_PATH);
 	vertexShader.compile(GL_VERTEX_SHADER);
 	fragmentShader.compile(GL_FRAGMENT_SHADER);
-
+	geometryShader.setPath(GEOMETRY_SHADER_PATH);
+	geometryShader.compile(GL_GEOMETRY_SHADER);
 	// ici try catch de la compile
 
 
 
 	GLuint shader_programme = glCreateProgram();
 	glAttachShader(shader_programme, vertexShader.id);
+	glAttachShader(shader_programme, geometryShader.id);
 	glAttachShader(shader_programme, fragmentShader.id);
 	glLinkProgram(shader_programme);
 
