@@ -48,35 +48,33 @@ int		parsing(t_env *env, int ac, char **av)
 int		main_loop(t_env *env)
 {
 	env->obj.genBuffers();
-	const char* vertex_shader =
-		"#version 400\n"
-		"in vec3 vp;"
-		"uniform mat4 worldToCam;"
-		"uniform mat4 objToWorld;"
-		"uniform mat4 persp;"
-		"void main() {"
-		"  gl_Position = persp * worldToCam * objToWorld * vec4(vp.x, vp.y, vp.z, 1.0);"
-		"}";
 
-	const char* fragment_shader =
-		"#version 400\n"
-		"out vec4 frag_colour;"
-		"void main() {"
-		"  frag_colour = vec4(0.5, 0.5, 1.0, 1.0);"
-		"}";
+	Shader vertexShader;
+	Shader fragmentShader;
+	Shader geometryShader;
 
-	GLuint vs = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vs, 1, &vertex_shader, NULL);
-	glCompileShader(vs);
-	GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fs, 1, &fragment_shader, NULL);
-	glCompileShader(fs);
+	vertexShader.setPath(VERTEX_SHADER_PATH);
+	fragmentShader.setPath(FRAGMENT_SHADER_PATH);
+	vertexShader.compile(GL_VERTEX_SHADER);
+	fragmentShader.compile(GL_FRAGMENT_SHADER);
+	geometryShader.setPath(GEOMETRY_SHADER_PATH);
+	geometryShader.compile(GL_GEOMETRY_SHADER);
+	// ici try catch de la compile
+
+
 
 	GLuint shader_programme = glCreateProgram();
-	glAttachShader(shader_programme, fs);
-	glAttachShader(shader_programme, vs);
+	glAttachShader(shader_programme, vertexShader.id);
+	glAttachShader(shader_programme, geometryShader.id);
+	glAttachShader(shader_programme, fragmentShader.id);
 	glLinkProgram(shader_programme);
-// penser a verif la compile du shader
+
+	// marked for deletion after program is deleted
+	glDeleteShader(vertexShader.id);
+	glDeleteShader(geometryShader.id);
+	glDeleteShader(fragmentShader.id);
+
+
 	env->cam.bindToProgram(shader_programme);
 	env->obj.bindToProgram(shader_programme);
 
@@ -111,19 +109,9 @@ int		main_loop(t_env *env)
 		// put the stuff we've been drawing onto the display
 		glfwSwapBuffers(env->win);
 	}
-	/*
-	   while (!glfwWindowShouldClose(env->win))
-	   {
-	// Render here 
-	glClear(GL_COLOR_BUFFER_BIT);
 
-	// Swap front and back buffers 
-	glfwSwapBuffers(env->win);
-
-	// Poll for and process events 
-	glfwPollEvents();
-	}
-	*/
+	glDeleteProgram(shader_programme);
+	// penser a unbind les buffers
 	return (1);
 }
 
@@ -142,13 +130,34 @@ void	display_infos(void)
 	printf("OpenGL version supported %s\n", version);
 }
 
+void	test_init_callbacks(t_env *env)
+{
+	glfwSetErrorCallback(error_callback);
+	glfwSetKeyCallback(env->win, key_callback);
+	glfwSetCursorPosCallback(env->win, mouse_move_callback);
+	glfwSetMouseButtonCallback(env->win, mouse_button_callback);
+    //glfwSetFrameBufferSizeCallback to be notified when the size change
+}
+
+int		test_init(t_env *env)
+{
+	if (!init_glfw(env))
+		return (0);
+	if (!init_main_window(env)) // create windows before assigning callbacks 
+		return (0);
+	test_init_callbacks(env);
+	env->mode = NONE;
+    env->time.init();
+	return (1);
+}
+
 int		main(int ac, char **av)
 {
 	t_env	env;
 
 	if (!parsing(&env, ac, av))
 		return (1);
-	if (!init(&env))
+	if (!test_init(&env))
 		return (1);
 	//display_infos();
 	main_loop(&env);
